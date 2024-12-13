@@ -24,7 +24,7 @@
 java -jar send_email.jar [web|gui]
 ```
 
-- `web`：启动 SpringMVC（目前只实现了后端功能）。
+- `web`：启动 SpringMVC。
 - `gui`：启动 JavaFX 图形化界面。
 
 以下以 GUI 模块为例：
@@ -155,56 +155,4 @@ CSV 数据文件（Test.csv）：
 
 ------
 
-## 后端接口文档
-
-### 配置接口 `/api/config`
-
-- `GET /api/config/getConfig`：获取单个配置
-- `GET /api/config/getAllConfig`：获取所有配置
-- `POST /api/config/addConfig`：新增配置
-- `POST /api/config/updateConfig`：更新配置
-- `POST /api/config/delConfig`：删除配置
-- `GET /api/config/getConfigPath`：获取配置文件路径
-
-------
-
-### 文件解析接口 `/api/file`
-
-- `POST /api/file/conversion`：上传并解析 `.eml` 文件，自动转换为 HTML 格式并下载
-
-------
-
-### 代理接口 `/api/proxy`
-
-- `POST /api/proxy/setProxy`：设置代理
-- `POST /api/proxy/unSetProxy`：取消代理
-
-------
-
-### 邮件发送接口 `/api/email`
-
-- `POST /api/email/uploadAttachments`：上传附件
-- `GET /api/email/getUploadAttachments`：获取附件列表
-- `POST /api/email/delUploadAttachments`：删除所有附件
-- `POST /api/email/send`：发送邮件
-
-------
-
-### 自定义邮件接口 `/api/email`
-
-- `POST /api/email/uploadTemplateAndCsv`：上传模板和 CSV 文件
-
-- `GET /api/email/getUploadTemplateAndCsv`：获取模板和 CSV 文件列表
-
-- `POST /api/email/delUploadTemplateAndCsv`：删除上传的模板和 CSV 文件
-
-- `POST /api/email/validationCustomEmail`：验证自定义邮件
-
-- `POST /api/email/sendCustomEmail`：发送自定义邮件
-
-  
-
-## TODO
-
-- [ ] 封装前端界面
-- [ ] 编写 API 文档（Swagger）
+登录后根据提示跳转到Swagger-UI，进行调用API使用。
