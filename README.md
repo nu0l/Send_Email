@@ -76,6 +76,38 @@ chmod 777 send_email.jar
    | 发件昵称   | 管理员                                         |
    | 发件邮箱   | 与邮箱用户名相同（如 example@163.com）         |
 
+配置文件示例：
+```
+# 代理设置
+proxy.enable=true
+proxy.type=SOCKS5
+proxy.host=127.0.0.1
+proxy.port=7890
+proxy.username=
+proxy.password=
+
+# 邮件配置 - 可以配置多个邮箱账户
+mail.accounts[0].id=0
+mail.accounts[0].host=smtp.163.com
+mail.accounts[0].port=465
+mail.accounts[0].ssl=true
+mail.accounts[0].username=xxxx@163.com
+mail.accounts[0].password=xxxxxxx
+mail.accounts[0].from=xxxx@163.com
+mail.accounts[0].nickname=管理员
+mail.accounts[0].authrequired=false
+
+mail.accounts[1].id=1
+mail.accounts[1].host=smtp.qq.com
+mail.accounts[1].port=465
+mail.accounts[1].ssl=true
+mail.accounts[1].username=xxxx@foxmail.com
+mail.accounts[1].password=xxxxxx
+mail.accounts[1].from=xxxx@foxmail.com
+mail.accounts[1].nickname=管理员
+mail.accounts[1].authrequired=false
+```
+
 2. 点击 **添加** 按钮，完成配置写入
 
 3. 通过 **查看配置** 选项确认配置是否正确
