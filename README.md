@@ -76,7 +76,11 @@ chmod 777 send_email.jar
    | 发件昵称   | 管理员                                         |
    | 发件邮箱   | 与邮箱用户名相同（如 example@163.com）         |
 
-配置文件示例：
+2. 点击 **添加** 按钮，完成配置写入
+
+3. 通过 **查看配置** 选项确认配置是否正确
+
+*配置文件示例：*
 ```
 # 代理设置
 proxy.enable=true
@@ -107,10 +111,6 @@ mail.accounts[1].from=xxxx@foxmail.com
 mail.accounts[1].nickname=管理员
 mail.accounts[1].authrequired=false
 ```
-
-2. 点击 **添加** 按钮，完成配置写入
-
-3. 通过 **查看配置** 选项确认配置是否正确
 
 ------
 
