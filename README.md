@@ -80,13 +80,13 @@ java -jar send_email.jar gui
    | 发件昵称   | 管理员                                         |
    | 发件邮箱   | 与邮箱用户名相同（如 example@163.com）         |
 
-   ![addConfig](C:\Users\kai12\OneDrive\Desktop\Send_Email-main\README.assets\addConfig.png)
+   ![addConfig](/README.assets/addConfig.png)
 
 2. 点击 **添加** 按钮，完成配置写入
 
 3. 通过 **查看配置** 选项确认配置是否正确
 
-   ![wechat_2024-12-14_191142_050](C:\Users\kai12\OneDrive\Desktop\Send_Email-main\README.assets\catConfig.png)
+   ![wechat_2024-12-14_191142_050](/README.assets/catConfig.png)
 
 *也可以直接手动修改配置文件*
 
@@ -129,11 +129,11 @@ mail.accounts[1].authrequired=false
 
 支持从邮箱导出的 `.eml` 文件直接转换为 `.html` 格式邮件，并保持原始样式进行发送。**原汁原味**。
 
-![exportEML](README.assets/exportEML.png)
+![exportEML](/README.assets/exportEML.png)
 
 预览导出后的HTML格式：
 
-![previewHTML](README.assets/previewHTML.png)
+![previewHTML](/README.assets/previewHTML.png)
 
 ------
 
