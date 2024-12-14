@@ -143,8 +143,6 @@ mail.accounts[1].authrequired=false
 
 ![sendEmailDemo](/README.assets/sendEmailDemo.png)
 
-*收件展示：*
-
 发送流程：
 
 1. 输入或导入邮件内容
