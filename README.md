@@ -6,7 +6,7 @@
 
 
 
-## OvO
+## 0x00. OvO
 
 - **多邮箱发送**：支持配置多个邮箱账号
 - **随机字符替换**：在邮件正文中插入随机不可见字符，规避内容检测
@@ -22,7 +22,7 @@
 
 
 
-## 快速开始
+## 0x01. 快速开始
 
 ### 运行方式
 
@@ -34,12 +34,6 @@ java -jar send_email.jar [web|gui]
 
 - `web`：启动 Spring Web
 - `gui`：启动 JavaFX 图形化界面
-
-------
-
-
-
-## GUI 模块
 
 ### 配置说明
 
@@ -58,7 +52,17 @@ ls -la ~/.config/sendEmail/
 chmod 777 send_email.jar
 ```
 
-#### 配置邮箱账户
+------
+
+
+
+## 0x02. GUI 模块
+
+```bash
+java -jar send_email.jar gui
+```
+
+### 2.1 配置邮箱账户
 
 运行工具后，按以下步骤添加邮箱账户（以 163 邮箱为例）：
 
@@ -76,12 +80,19 @@ chmod 777 send_email.jar
    | 发件昵称   | 管理员                                         |
    | 发件邮箱   | 与邮箱用户名相同（如 example@163.com）         |
 
+   ![addConfig](C:\Users\kai12\OneDrive\Desktop\Send_Email-main\README.assets\addConfig.png)
+
 2. 点击 **添加** 按钮，完成配置写入
 
 3. 通过 **查看配置** 选项确认配置是否正确
 
-*配置文件示例：*
-```
+   ![wechat_2024-12-14_191142_050](C:\Users\kai12\OneDrive\Desktop\Send_Email-main\README.assets\catConfig.png)
+
+*也可以直接手动修改配置文件*
+
+*示例：*
+
+```properties
 # 代理设置
 proxy.enable=true
 proxy.type=SOCKS5
@@ -114,17 +125,25 @@ mail.accounts[1].authrequired=false
 
 ------
 
-### HTML 转换
+### 2.2 HTML 转换
 
 支持从邮箱导出的 `.eml` 文件直接转换为 `.html` 格式邮件，并保持原始样式进行发送。**原汁原味**。
 
-![image-20241212155254029](README.assets/image-20241212155254029.png)
+![exportEML](README.assets/exportEML.png)
+
+预览导出后的HTML格式：
+
+![previewHTML](README.assets/previewHTML.png)
 
 ------
 
-### 发送邮件
+### 2.3 发送邮件
 
 建议配置多个邮箱账户，当第一个邮箱发送失败时会自动切换到其他邮箱
+
+![sendEmailDemo](/README.assets/sendEmailDemo.png)
+
+*收件展示：*
 
 发送流程：
 
@@ -133,9 +152,19 @@ mail.accounts[1].authrequired=false
 2. 程序会执行两步优化：
 
    - 随机插入不可见字符
-   - 随机添加干扰字符
 
-   通过这些操作提升邮件通过网关检测的概率
+     ![随机插入不可见字符](/README.assets/随机插入不可见字符.png)
+
+   - 随机添加隐藏干扰字符
+
+     ![随机插入隐藏内容](/README.assets/随机插入隐藏内容.png)
+
+3. 对内容进行`quoted-printable`编码
+
+![QPCode](/README.assets/QPCode.png)
+
+
+
 
 #### Tips：
 
@@ -144,7 +173,7 @@ mail.accounts[1].authrequired=false
 
 ------
 
-### 定制化邮件
+### 2.4 定制化邮件
 
 在某些情况下，可以对邮件内容进行定制化设计（例如针对某单位的精准推广或信息分发🎣）。
 
@@ -162,11 +191,29 @@ HTML 模板（Test.html）：
     <p>亲爱的 <span th:text="${userName}"></span> (工号: <span th:text="${workNo}"></span>)，</p>
     <p>以下是关于 <span th:text="${companyName}"></span> VPN 的安装手册，帮助您顺利完成 VPN 的设置和使用。</p>
     <hr>
+    <h3 style="font-size: 14px;">
+        为了确保安全的远程访问，公司要求通过 VPN 服务安全地连接到公司内部网络，访问必要的资源。
+    </h3>
     <ul>
         <li>操作系统：Windows 10、macOS、Linux</li>
-        <li>下载链接：<a href="https://baidu.com/">XXVPN 下载地址</a></li>
+        <li>网络连接：稳定的互联网连接</li>
+        <li>下载链接：<a href="https://baidu.com/">XXVPN下载地址</a></li>
     </ul>
-    <p>如遇问题，请联系 IT 支持团队。</p>
+    <div>
+        <b>注意事项：</b>
+    </div>
+    <ul>
+        <li><strong>无法连接 VPN</strong>：请检查网络连接，确保输入的用户名和密码正确。</li>
+        <li><strong>连接不稳定</strong>：尝试重新连接，或联系 IT 支持。</li>
+    </ul>
+    <h4>联系支持</h4>
+    <p>如您在安装或使用过程中遇到任何问题，请联系 IT 支持团队：</p>
+    <ul>
+        <li>电子邮件：<a href="mailto:support@company.com" target="_blank">support@company.com</a></li>
+        <li>电话：123-456-7890</li>
+    </ul>
+    <hr>
+    <p>感谢您的配合，祝您工作顺利！</p>
 </div>
 </html>
 ```
@@ -174,22 +221,25 @@ HTML 模板（Test.html）：
 CSV 数据文件（Test.csv）：
 *toEmail和emailSubject为必填项*
 
-| toEmail        | emailSubject | userName | workNo | companyName |
-| -------------- | ------------ | -------- | ------ | ----------- |
-| demo1@mail.com | VPN 安装指南 | 张三     | 001    | 公司 A      |
-| demo2@mail.com | VPN 安装指南 | 李四     | 002    | 公司 B      |
+| toEmail     | emailSubject    | userName | workNo | companyName             |
+| ----------- | --------------- | -------- | ------ | ----------------------- |
+| xxx@qq.com  | 定制化邮件主题1 | 张伟     | 10086  | 上海浦南机场机场路198号 |
+| xxx@126.com | 定制化邮件主题2 | 李伟     | 10010  | 西安高新区新新路188号   |
+| xxx@163.com | 定制化邮件主题3 | 王伟     | 10001  | 台北中山路122号         |
 
 #### 效果展示
 
-邮件示例：
+![王伟](/README.assets/王伟.png)
 
-![image-20241212162200614](README.assets/image-20241212162200614.png)
+![张伟](/README.assets/张伟.png)
 
 ----
 
 
 
-## WEB 模块
+## 0x03. WEB 模块
+
+`java -jar send_email.jar web`
 
 运行 WEB 模块后，系统会生成默认的登录用户名和密码：
 
@@ -201,11 +251,19 @@ CSV 数据文件（Test.csv）：
 
 登录后根据提示跳转到Swagger-UI，进行调用API使用
 
-![wechat_2024-12-14_124719_811](README.assets/wechat_2024-12-14_124719_811.png)
+![webIndex](/README.assets/webIndex.png)
+
+![swagger-UI](/README.assets/swagger-UI.png)
+
+Swagger-API中均有配置接口和参数说明，这里不再做演示
+
+![swagger-demo](/README.assets/swagger-demo.png)
 
 ------
 
-## TODO
-欢迎在GitHub提issues建议或需求。
 
+
+## 0x04. TODO
+
+欢迎在GitHub提issues建议或需求。
 
