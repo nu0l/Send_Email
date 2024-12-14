@@ -168,4 +168,4 @@ CSV 数据文件（Test.csv）：
 
 登录后根据提示跳转到Swagger-UI，进行调用API使用
 
-![wechat_2024-12-14_124719_811](README.assets\wechat_2024-12-14_124719_811.png)
+![wechat_2024-12-14_124719_811](README.assets/wechat_2024-12-14_124719_811.png)
