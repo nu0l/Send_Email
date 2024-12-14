@@ -2,7 +2,7 @@
 
 > 一款轻量化可定制模板的邮件批量发送工具 | 可用于攻防钓鱼或其他邮件个性化的场景 | 可启动JavaFX或SpringWeb环境
 
-----
+-----
 
 
 
@@ -161,7 +161,7 @@ mail.accounts[1].authrequired=false
 
 3. 对内容进行`quoted-printable`编码
 
-![QPCode](/README.assets/QPCode.png)
+     ![QPCode](/README.assets/QPCode.png)
 
 
 
@@ -233,7 +233,7 @@ CSV 数据文件（Test.csv）：
 
 ![张伟](/README.assets/张伟.png)
 
-----
+-----
 
 
 
