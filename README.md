@@ -140,6 +140,7 @@ HTML 模板（Test.html）：
 ```
 
 CSV 数据文件（Test.csv）：
+*toEmail和emailSubject为必填项*
 
 | toEmail        | emailSubject | userName | workNo | companyName |
 | -------------- | ------------ | -------- | ------ | ----------- |
@@ -169,3 +170,10 @@ CSV 数据文件（Test.csv）：
 登录后根据提示跳转到Swagger-UI，进行调用API使用
 
 ![wechat_2024-12-14_124719_811](README.assets/wechat_2024-12-14_124719_811.png)
+
+------
+
+## TODO
+欢迎在GitHub提issues建议或需求。
+
+
