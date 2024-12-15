@@ -80,13 +80,13 @@ java -jar send_email.jar gui
    | 发件昵称   | 管理员                                         |
    | 发件邮箱   | 与邮箱用户名相同（如 example@163.com）         |
 
-   ![addConfig](/README.assets/addConfig.png)
+   ![addConfig](README.assets/addConfig.png)
 
 2. 点击 **添加** 按钮，完成配置写入
 
 3. 通过 **查看配置** 选项确认配置是否正确
 
-   ![wechat_2024-12-14_191142_050](/README.assets/catConfig.png)
+   ![wechat_2024-12-14_191142_050](README.assets/catConfig.png)
 
 *也可以直接手动修改配置文件*
 
@@ -129,11 +129,11 @@ mail.accounts[1].authrequired=false
 
 支持从邮箱导出的 `.eml` 文件直接转换为 `.html` 格式邮件，并保持原始样式进行发送。**原汁原味**。
 
-![exportEML](/README.assets/exportEML.png)
+![exportEML](README.assets/exportEML.png)
 
 预览导出后的HTML格式：
 
-![previewHTML](/README.assets/previewHTML.png)
+![previewHTML](README.assets/previewHTML.png)
 
 ------
 
@@ -141,7 +141,7 @@ mail.accounts[1].authrequired=false
 
 建议配置多个邮箱账户，当第一个邮箱发送失败时会自动切换到其他邮箱
 
-![sendEmailDemo](/README.assets/sendEmailDemo.png)
+![sendEmailDemo](README.assets/sendEmailDemo.png)
 
 发送流程：
 
@@ -151,15 +151,15 @@ mail.accounts[1].authrequired=false
 
    - 随机插入不可见字符
 
-     ![随机插入不可见字符](/README.assets/随机插入不可见字符.png)
+     ![随机插入不可见字符](README.assets/随机插入不可见字符.png)
 
    - 随机添加隐藏干扰字符
 
-     ![随机插入隐藏内容](/README.assets/随机插入隐藏内容.png)
+     ![随机插入隐藏内容](README.assets/随机插入隐藏内容.png)
 
 3. 对内容进行`quoted-printable`编码
 
-     ![QPCode](/README.assets/QPCode.png)
+     ![QPCode](README.assets/QPCode.png)
 
 
 
@@ -227,9 +227,9 @@ CSV 数据文件（Test.csv）：
 
 #### 效果展示
 
-![王伟](/README.assets/王伟.png)
+![王伟](README.assets/王伟.png)
 
-![张伟](/README.assets/张伟.png)
+![张伟](README.assets/张伟.png)
 
 -----
 
@@ -249,13 +249,13 @@ CSV 数据文件（Test.csv）：
 
 登录后根据提示跳转到Swagger-UI，进行调用API使用
 
-![webIndex](/README.assets/webIndex.png)
+![webIndex](README.assets/webIndex.png)
 
-![swagger-UI](/README.assets/swagger-UI.png)
+![swagger-UI](README.assets/swagger-UI.png)
 
 Swagger-API中均有配置接口和参数说明，这里不再做演示
 
-![swagger-demo](/README.assets/swagger-demo.png)
+![swagger-demo](README.assets/swagger-demo.png)
 
 ------
 
