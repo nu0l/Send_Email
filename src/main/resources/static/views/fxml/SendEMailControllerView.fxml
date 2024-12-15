@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiSendEMailController">
+
+    <children>
+        <!-- 代理菜单 -->
+        <MenuButton fx:id="configurationOptionsMenuButton" layoutX="14.0" layoutY="14.0" text="代理">
+            <items>
+                <MenuItem onAction="#proxySettingsMenuButton" text="代理设置" />
+            </items>
+        </MenuButton>
+
+        <!-- 输入字段 -->
+        <TextField fx:id="recipientEmailTextField" layoutX="126.0" layoutY="67.0" prefHeight="27.0" prefWidth="255.0" promptText="xxx@qq.com" />
+        <Button fx:id="loadRecipientsButton" layoutX="416.0" layoutY="67.0" onAction="#loadRecipientsFromTxt" prefHeight="27.0" prefWidth="110.0" text="导入收件人" />
+
+        <TextField fx:id="subjectTextField" layoutX="126.0" layoutY="116.0" prefHeight="27.0" prefWidth="255.0" promptText="邮件主题" />
+        <TextField fx:id="contentTextField" layoutX="126.0" layoutY="165.0" prefHeight="27.0" prefWidth="255.0" promptText="邮件内容" />
+        <Button fx:id="loadHtmlContentButton" layoutX="416.0" layoutY="165.0" onAction="#loadHtmlContent" prefHeight="27.0" prefWidth="110.0" text="导入HTML内容" />
+
+        <!-- 附件按钮 -->
+        <Button fx:id="addAttachmentsButton" layoutX="126.0" layoutY="209.0" onAction="#addAttachments" prefHeight="27.0" prefWidth="110.0" text="添加附件" />
+
+        <!-- 发送按钮 -->
+        <Button layoutX="316.0" layoutY="209.0" onAction="#sendButton" prefHeight="27.0" prefWidth="65.0" text="发送" textFill="#e10c0c" />
+
+        <!-- 状态显示区域 -->
+        <TextArea fx:id="statusDisplayArea" editable="false" layoutX="21.0" layoutY="282.0" prefHeight="263.0" prefWidth="506.0" promptText="Results show" />
+
+
+        <!-- 分隔线 -->
+        <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
+        <Separator layoutY="252.0" prefHeight="27.0" prefWidth="547.0" />
+      <Label layoutX="30.0" layoutY="72.0" text="收件人邮箱：" />
+      <Label layoutX="37.0" layoutY="121.0" text="邮件主题：" />
+      <Label layoutX="37.0" layoutY="170.0" text="邮件内容：" />
+      <Label layoutX="33.0" layoutY="214.0" text="附件(可选)：" />
+    </children>
+</AnchorPane>

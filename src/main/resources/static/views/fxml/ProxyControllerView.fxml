@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import java.lang.String?>
+<AnchorPane prefHeight="295.0" prefWidth="236.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiProxyController">
+    <children>
+        <Label layoutX="23.0" layoutY="59.0" text="协议：" />
+
+        <ComboBox fx:id="proxyTypeComboBox" layoutX="76.0" layoutY="54.0" prefHeight="27.0" prefWidth="80.0" promptText="选择">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="HTTP" />
+                    <String fx:value="HTTPS" />
+                    <String fx:value="SOCKS5" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label layoutX="17.0" layoutY="98.0" text="IP地址：" />
+        <TextField fx:id="proxyHostTextField" layoutX="76.0" layoutY="93.0" prefHeight="27.0" prefWidth="133.0" text="127.0.0.1" />
+        <Label layoutX="22.0" layoutY="139.0" text="端口：" />
+        <TextField fx:id="proxyPortTextField" layoutX="76.0" layoutY="134.0" prefHeight="27.0" prefWidth="133.0" text="7890" />
+        <Label layoutX="17.0" layoutY="177.0" text="用户名：" />
+        <TextField fx:id="proxyUsernameTextField" layoutX="76.0" layoutY="172.0" prefHeight="27.0" prefWidth="133.0" />
+        <Label layoutX="23.0" layoutY="220.0" text="密码：" />
+        <TextField fx:id="proxyPasswordTextField" layoutX="76.0" layoutY="215.0" prefHeight="27.0" prefWidth="133.0" />
+
+        <Button fx:id="saveProxySettingButton" layoutX="145.0" layoutY="256.0" mnemonicParsing="false" onAction="#saveProxySettingButton" text="保存" />
+
+        <RadioButton fx:id="enableRadioButton" layoutX="77.0" layoutY="21.0" mnemonicParsing="false" text="启用" />
+        <RadioButton fx:id="disableRadioButton" layoutX="142.0" layoutY="21.0" mnemonicParsing="false" selected="true" text="禁用" />
+
+        <Button layoutX="80.0" layoutY="256.0" mnemonicParsing="false" text="取消" />
+        <Label layoutX="23.0" layoutY="21.0" text="状态：" />
+    </children>
+</AnchorPane>
+

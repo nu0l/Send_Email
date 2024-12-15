@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
+<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiReadMeController">
+   <children>
+   
+       <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
+   
+       <WebView fx:id="webView" layoutY="53.0" prefHeight="504.0" prefWidth="550.0" />
+   </children>
+
+</AnchorPane>

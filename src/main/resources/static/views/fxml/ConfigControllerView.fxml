@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiConfigController">
+   <children>
+       <MenuButton fx:id="configurationOptionsMenuButton" layoutX="15.0" layoutY="14.0" text="选项">
+           <items>
+               <MenuItem onAction="#getAllConfigurationOptionsMenuButton" text="查看所有配置" />
+               <MenuItem onAction="#getConfigurationOptionsMenuButton" text="查看配置" />
+               <MenuItem onAction="#addConfigurationOptionsMenuButton" text="添加配置" />
+               <MenuItem onAction="#otherOperationsButton" text="其他操作" />
+           </items>
+       </MenuButton>
+   
+       <TextField fx:id="smtpHostTextField" layoutX="83.0" layoutY="115.0" prefHeight="27.0" prefWidth="154.0" promptText="smtp.xxx.com" />
+       <TextField fx:id="smtpPortTextField" layoutX="83.0" layoutY="159.0" prefHeight="27.0" prefWidth="154.0" promptText="port" />
+       <TextField fx:id="smtpSslTextField" layoutX="83.0" layoutY="202.0" prefHeight="27.0" prefWidth="154.0" promptText="true | false" />
+       <TextField fx:id="smtpUserNameTextField" layoutX="369.0" layoutY="71.0" prefHeight="27.0" prefWidth="154.0" promptText="xxx@xxx.com" />
+       <TextField fx:id="smtpPassWordTextField" layoutX="369.0" layoutY="115.0" prefHeight="27.0" prefWidth="154.0" promptText="*********" />
+       <TextField fx:id="smtpFromTextField" layoutX="369.0" layoutY="202.0" prefHeight="27.0" prefWidth="154.0" promptText="建议不要伪造邮箱" />
+       <TextField fx:id="smtpNickNameTextField" layoutX="369.0" layoutY="159.0" prefHeight="27.0" prefWidth="154.0" promptText="nickname" />
+       <TextField fx:id="smtpAuthRequiredTextField" layoutX="83.0" layoutY="244.0" prefHeight="27.0" prefWidth="154.0" promptText="true | false" />
+       <TextField fx:id="smtpConfigIdTextField" layoutX="83.0" layoutY="71.0" prefHeight="27.0" prefWidth="154.0" promptText="id" />
+
+       <Button fx:id="addButton" layoutX="293.0" layoutY="244.0" onAction="#addButton" text="添加" />
+
+       <TextArea fx:id="resultArea" editable="false" layoutX="21.0" layoutY="301.0" prefHeight="244.0" prefWidth="505.0" promptText="Results show" />
+      <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
+      <Separator layoutY="274.0" prefHeight="27.0" prefWidth="547.0" />
+      <Label layoutX="27.0" layoutY="76.0" text="序号：" />
+      <Label layoutX="14.0" layoutY="120.0" text="服务地址：" />
+      <Label layoutX="27.0" layoutY="164.0" text="端口：" />
+      <Label layoutX="28.0" layoutY="207.0" text="SSL：" />
+      <Label layoutX="15.0" layoutY="249.0" text="匿名邮箱：" />
+      <Label layoutX="276.0" layoutY="73.0" text="邮箱用户名：" />
+      <Label layoutX="284.0" layoutY="120.0" text="邮箱密码：" />
+      <Label layoutX="283.0" layoutY="164.0" text="发件昵称：" />
+      <Label layoutX="284.0" layoutY="207.0" text="发件邮箱：" />
+
+   </children>
+
+</AnchorPane>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox prefHeight="640.0" prefWidth="588.0" spacing="10" style="-fx-background-color: #f4f4f4; -fx-padding: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiMainController">
+   <children>
+   
+       <!-- 按钮菜单 -->
+       <HBox alignment="CENTER_LEFT" spacing="10">
+      <children>
+          <Button fx:id="readMeButton" style="-fx-font-size: 14px;" text="说明" HBox.hgrow="ALWAYS" />
+          <Button fx:id="configButton" style="-fx-font-size: 14px;" text="邮件配置" HBox.hgrow="ALWAYS" />
+          <Button fx:id="emlToHtmlButton" style="-fx-font-size: 14px;" text="html转换" HBox.hgrow="ALWAYS" />
+          <Button fx:id="sendEmailButton" style="-fx-font-size: 14px;" text="发送邮件" HBox.hgrow="ALWAYS" />
+          <Button fx:id="customEmailButton"  style="-fx-font-size: 14px;" text="定制化邮件" HBox.hgrow="ALWAYS" />
+      </children>
+       </HBox>
+      <Separator prefHeight="0.0" prefWidth="436.0" />
+       <AnchorPane fx:id="contentPane" prefHeight="386.0" prefWidth="475.0" />
+   </children>
+
+</VBox>

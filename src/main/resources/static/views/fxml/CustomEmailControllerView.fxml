@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiCustomEmailController">
+    <children>
+        <!-- 代理菜单 -->
+        <MenuButton fx:id="configurationOptionsMenuButton" layoutX="14.0" layoutY="14.0" text="代理">
+            <items>
+                <MenuItem onAction="#proxySettingsMenuButton" text="代理设置" />
+            </items>
+        </MenuButton>
+
+        <TextField fx:id="templatePathTextField" layoutX="121.0" layoutY="79.0" prefHeight="27.0" prefWidth="222.0" promptText="请输入.html文件路径" />
+        <TextField fx:id="csvPathTextField" layoutX="121.0" layoutY="133.0" prefHeight="27.0" prefWidth="222.0" promptText="请输入.csv文件路径" />
+
+        <Button fx:id="startButton" layoutX="452.0" layoutY="189.0" onAction="#handleStartButton" prefHeight="27.0" prefWidth="74.0" text="发送" textFill="#e10c0c" />
+
+        <TextArea fx:id="statusDisplayArea" editable="false" layoutX="21.0" layoutY="301.0" prefHeight="244.0" prefWidth="505.0" promptText="Results show" />
+
+        <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
+        <Separator layoutY="274.0" prefHeight="27.0" prefWidth="547.0" />
+      <Label layoutX="35.0" layoutY="84.0" text="模板路径：" />
+      <Label layoutX="35.0" layoutY="138.0" text="文件路径：" />
+      <Button layoutX="395.0" layoutY="79.0" mnemonicParsing="false" onAction="#loadHtmlContentButton" text="导入HTML文件" />
+      <Button layoutX="395.0" layoutY="133.0" mnemonicParsing="false" onAction="#loadCsvContentButton" prefHeight="27.0" prefWidth="105.0" text="导入CSV文件" />
+      <Button fx:id="startButton1" layoutX="366.0" layoutY="189.0" onAction="#verifyButton" prefHeight="27.0" prefWidth="74.0" text="验证导入" />
+        <Label layoutX="31.0" layoutY="194.0" text="附件(可选)：" />
+        <Button fx:id="addAttachmentsButton" layoutX="121.0" layoutY="189.0" onAction="#addAttachments" prefHeight="27.0" prefWidth="115.0" text="添加附件" />
+
+    </children>
+</AnchorPane>
