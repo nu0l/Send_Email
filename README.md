@@ -268,3 +268,7 @@ Swagger-API中均有配置接口和参数说明，这里不再做演示
 ## 0x05. 说明
 
 本工具仅供学习、测试及研究使用，严禁用于任何形式的非法或未经授权的用途。如因违规使用导致任何后果，责任自负，请遵守相关法律法规。
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nu0l/Send_Email&type=Date)](https://star-history.com/#nu0l/Send_Email&Date)
