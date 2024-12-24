@@ -135,7 +135,13 @@ public class WebSendEMailController {
                 attachments = new HashMap<>();
                 // 合并所有附件到一个 Map 中
                 for (Map<String, String> attachment : attachmentsList) {
-                    attachments.putAll(attachment);
+                    if (attachment != null) {
+                        String fileName = attachment.get("fileName");
+                        String filePath = attachment.get("filePath");
+                        if (fileName != null && filePath != null) {
+                            attachments.put(fileName, filePath);
+                        }
+                    }
                 }
             }
 
@@ -144,7 +150,7 @@ public class WebSendEMailController {
             }
 
             // 构建 Email 对象并发送邮件
-            Email email = new Email(to, subject, content, attachments);
+            Email email = new Email(to, subject, content, attachments.isEmpty() ? null : attachments);
             emailService.sendEmail(email);
 
             return ResponseEntity.ok("邮件正在发送中，请到控制台查看发送日志");

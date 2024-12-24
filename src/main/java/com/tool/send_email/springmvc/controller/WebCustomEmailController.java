@@ -140,12 +140,18 @@ public class WebCustomEmailController {
             attachments = new HashMap<>();
             // 合并所有附件到一个 Map 中
             for (Map<String, String> attachment : attachmentsList) {
-                attachments.putAll(attachment);
+                if (attachment != null) {
+                    String fileName = attachment.get("fileName");
+                    String filePath = attachment.get("filePath");
+                    if (fileName != null && filePath != null) {
+                        attachments.put(fileName, filePath);
+                    }
+                }
             }
         }
         List<Map<String, String>> recipients = readCsv(csvPath);
         try {
-            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachments);
+            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachments.isEmpty() ? null : attachments);
             return ResponseEntity.ok("邮件正在发送中，请到控制台查看发送日志");
         } catch (MessagingException e) {
             return ResponseEntity.badRequest().body("邮件发送失败");
