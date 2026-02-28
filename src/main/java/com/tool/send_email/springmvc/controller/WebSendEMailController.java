@@ -150,7 +150,7 @@ public class WebSendEMailController {
             }
 
             // 构建 Email 对象并发送邮件
-            Email email = new Email(to, subject, content, attachments.isEmpty() ? null : attachments);
+            Email email = new Email(to, subject, content, attachments == null || attachments.isEmpty() ? null : attachments);
             emailService.sendEmail(email);
 
             return ResponseEntity.ok("邮件正在发送中，请到控制台查看发送日志");
