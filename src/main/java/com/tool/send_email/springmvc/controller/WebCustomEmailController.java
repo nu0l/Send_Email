@@ -151,7 +151,7 @@ public class WebCustomEmailController {
         }
         List<Map<String, String>> recipients = readCsv(csvPath);
         try {
-            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachments.isEmpty() ? null : attachments);
+            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachments == null || attachments.isEmpty() ? null : attachments);
             return ResponseEntity.ok("邮件正在发送中，请到控制台查看发送日志");
         } catch (MessagingException e) {
             return ResponseEntity.badRequest().body("邮件发送失败");

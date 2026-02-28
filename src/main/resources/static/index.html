@@ -3,80 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Email Tool</title>
+    <title>Send Email Web Console</title>
     <style>
-        /* 设置页面字体和背景 */
+        :root {
+            --bg: #f6f8fb;
+            --card: #ffffff;
+            --text: #1f2d3d;
+            --muted: #5e6b7a;
+            --primary: #1663e2;
+            --border: #dbe4f0;
+            --ok: #0f9d58;
+            --error: #d93025;
+        }
+
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
             margin: 0;
-            padding: 0;
-            line-height: 1.6;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
         }
 
-        /* 页面主体容器 */
-        .container {
-            width: 80%;
+        .layout {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 30px;
-            text-align: center;
+            padding: 20px;
         }
 
-        /* 页眉样式 */
-        h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 20px;
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
         }
 
-        /* 段落样式 */
-        p {
-            font-size: 1.1rem;
-            color: #7f8c8d;
-            margin-bottom: 20px;
+        h1, h2 { margin-top: 0; }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        h2 { font-size: 1.15rem; margin-bottom: 12px; }
+        p, label, small { color: var(--muted); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
         }
 
-        /* 链接按钮样式 */
-        a {
-            display: inline-block;
-            padding: 12px 30px;
-            margin-top: 20px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+        input, textarea, select, button {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 10px;
+            font-size: 14px;
         }
 
-        /* 鼠标悬停效果 */
-        a:hover {
-            background-color: #2980b9;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        textarea { min-height: 110px; resize: vertical; }
+
+        button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: auto;
+            min-width: 90px;
         }
 
-        /* 页脚样式 */
-        footer {
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: #95a5a6;
+        button.secondary { background: #516274; }
+        button.danger { background: #c0392b; }
+
+        .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 999px;
         }
+        .tab.active { background: var(--primary); color: #fff; }
+
+        .pane { display: none; }
+        .pane.active { display: block; }
+
+        #status {
+            white-space: pre-wrap;
+            background: #f2f6fc;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 250px;
+            overflow: auto;
+            font-size: 13px;
+        }
+
+        .success { color: var(--ok); }
+        .error { color: var(--error); }
+        code { background: #eef3fb; padding: 1px 6px; border-radius: 6px; }
     </style>
 </head>
 <body>
+<div class="layout">
+    <div class="card">
+        <h1>Send Email Web Console</h1>
+        <p>在一个界面完成配置、附件管理、邮件发送、模板邮件及 eml 转 html。</p>
+        <div class="grid">
+            <div>
+                <label>用户名</label>
+                <input id="authUser" placeholder="Spring Security 用户名">
+            </div>
+            <div>
+                <label>密码</label>
+                <input id="authPass" type="password" placeholder="Spring Security 密码">
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <button onclick="saveAuth()">保存认证信息</button>
+            <a href="/1213300000/swagger-ui.html" target="_blank"><button class="secondary" type="button">打开 Swagger-UI</button></a>
+        </div>
+    </div>
 
-<div class="container">
-    <h1>Send Email Tool</h1>
-    <p>Web不提供前端界面</p>
-    <p>如需要使用请到 Swagger-UI 界面，调用 API 使用。</p>
-    <a href="/1213300000/swagger-ui.html" target="_blank">访问 Swagger-UI</a>
+    <div class="card">
+        <div class="tabs" id="tabs"></div>
+    </div>
 
-    <footer>
-        <p>© 2024 Send Email Tool - All rights reserved.</p>
-    </footer>
+    <div id="panes"></div>
+
+    <div class="card">
+        <h2>操作日志</h2>
+        <div id="status">等待操作...</div>
+    </div>
 </div>
 
+<script>
+    const paneDefs = [
+        { id: 'config', title: '邮箱配置' },
+        { id: 'proxy', title: '代理设置' },
+        { id: 'convert', title: 'EML 转 HTML' },
+        { id: 'attachment', title: '附件管理' },
+        { id: 'send', title: '普通发送' },
+        { id: 'custom', title: '模板邮件' }
+    ];
+
+    const tabsEl = document.getElementById('tabs');
+    const panesEl = document.getElementById('panes');
+
+    function setStatus(msg, ok = true) {
+        const el = document.getElementById('status');
+        const time = new Date().toLocaleTimeString();
+        el.innerText = `[${time}] ${msg}\n\n` + el.innerText;
+        el.className = ok ? 'success' : 'error';
+    }
+
+    function authHeader() {
+        const user = document.getElementById('authUser').value.trim();
+        const pass = document.getElementById('authPass').value;
+        if (!user || !pass) {
+            throw new Error('请先填写用户名和密码并保存');
+        }
+        return 'Basic ' + btoa(`${user}:${pass}`);
+    }
+
+    async function api(path, options = {}) {
+        const headers = Object.assign({}, options.headers || {}, { Authorization: authHeader() });
+        const res = await fetch(path, { ...options, headers });
+        const text = await res.text();
+        if (!res.ok) throw new Error(text || `请求失败: ${res.status}`);
+        try { return JSON.parse(text); } catch { return text; }
+    }
+
+    function saveAuth() {
+        localStorage.setItem('sendEmail.web.authUser', document.getElementById('authUser').value);
+        localStorage.setItem('sendEmail.web.authPass', document.getElementById('authPass').value);
+        setStatus('认证信息已保存到浏览器。');
+    }
+
+    function loadAuth() {
+        document.getElementById('authUser').value = localStorage.getItem('sendEmail.web.authUser') || '';
+        document.getElementById('authPass').value = localStorage.getItem('sendEmail.web.authPass') || '';
+    }
+
+    function renderTabs() {
+        paneDefs.forEach((d, i) => {
+            const tab = document.createElement('button');
+            tab.className = 'tab' + (i === 0 ? ' active' : '');
+            tab.innerText = d.title;
+            tab.onclick = () => activatePane(d.id);
+            tabsEl.appendChild(tab);
+
+            const pane = document.createElement('div');
+            pane.className = 'card pane' + (i === 0 ? ' active' : '');
+            pane.id = 'pane-' + d.id;
+            panesEl.appendChild(pane);
+        });
+    }
+
+    function activatePane(id) {
+        document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', paneDefs[i].id === id));
+        document.querySelectorAll('.pane').forEach(el => el.classList.toggle('active', el.id === 'pane-' + id));
+    }
+
+    function paneHtml() {
+        document.getElementById('pane-config').innerHTML = `
+            <h2>邮箱配置管理</h2>
+            <div class="grid">
+                <input id="cfgIndex" type="number" placeholder="配置 ID (0开始)">
+                <input id="cfgHost" placeholder="SMTP 主机">
+                <input id="cfgPort" type="number" placeholder="端口">
+                <input id="cfgUser" placeholder="用户名">
+                <input id="cfgPass" placeholder="密码/授权码">
+                <input id="cfgFrom" placeholder="From 邮箱">
+                <input id="cfgNick" placeholder="昵称">
+                <select id="cfgSsl"><option value="true">SSL=true</option><option value="false">SSL=false</option></select>
+                <select id="cfgAuth"><option value="true">匿名=true</option><option value="false">匿名=false</option></select>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <button onclick="getAllConfig()">查询全部</button>
+                <button onclick="getConfigById()">按ID查询</button>
+                <button onclick="addConfig()">新增</button>
+                <button onclick="updateConfig()">更新</button>
+                <button class="danger" onclick="delConfig()">删除</button>
+            </div>`;
+
+        document.getElementById('pane-proxy').innerHTML = `
+            <h2>代理设置</h2>
+            <div class="grid">
+                <select id="proxyEnable"><option value="true">启用</option><option value="false">禁用</option></select>
+                <select id="proxyType"><option>HTTP</option><option>SOCKS4</option><option>SOCKS5</option></select>
+                <input id="proxyHost" placeholder="127.0.0.1">
+                <input id="proxyPort" type="number" placeholder="7890">
+                <input id="proxyUser" placeholder="代理用户名(可选)">
+                <input id="proxyPassword" placeholder="代理密码(可选)">
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <button onclick="setProxy()">保存代理</button>
+                <button class="danger" onclick="unsetProxy()">清空代理</button>
+            </div>`;
+
+        document.getElementById('pane-convert').innerHTML = `
+            <h2>EML 转 HTML</h2>
+            <input id="emlFile" type="file" accept=".eml">
+            <div class="row" style="margin-top:10px;"><button onclick="convertEml()">上传并下载 HTML</button></div>`;
+
+        document.getElementById('pane-attachment').innerHTML = `
+            <h2>附件管理</h2>
+            <input id="attachmentFiles" type="file" multiple>
+            <div class="row" style="margin-top:10px;">
+                <button onclick="uploadAttachments()">上传附件</button>
+                <button onclick="listAttachments()">刷新列表</button>
+                <button class="danger" onclick="clearAttachments()">清空附件</button>
+            </div>
+            <small>当前附件（发送邮件/模板邮件时可直接引用）：<code id="attachmentList">[]</code></small>`;
+
+        document.getElementById('pane-send').innerHTML = `
+            <h2>普通邮件发送</h2>
+            <div class="grid">
+                <textarea id="sendTo" placeholder="收件人，每行一个"></textarea>
+                <textarea id="sendSubject" placeholder="主题"></textarea>
+            </div>
+            <textarea id="sendContent" placeholder="HTML 或文本正文"></textarea>
+            <small>附件来自“附件管理”中的已上传列表</small>
+            <div class="row" style="margin-top:10px;"><button onclick="sendEmail()">立即发送</button></div>`;
+
+        document.getElementById('pane-custom').innerHTML = `
+            <h2>模板邮件（HTML + CSV）</h2>
+            <input id="customFiles" type="file" multiple accept=".html,.csv">
+            <div class="row" style="margin-top:10px;">
+                <button onclick="uploadTemplateCsv()">上传模板与CSV</button>
+                <button onclick="listTemplateCsv()">刷新文件列表</button>
+                <button class="danger" onclick="clearTemplateCsv()">清空模板文件</button>
+            </div>
+            <small>可用文件：<code id="templateCsvList">[]</code></small>
+            <div class="grid" style="margin-top:10px;">
+                <input id="templatePath" placeholder="模板文件完整路径">
+                <input id="csvPath" placeholder="CSV文件完整路径">
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <button class="secondary" onclick="validateCustom()">渲染预览验证</button>
+                <button onclick="sendCustom()">发送模板邮件</button>
+            </div>`;
+    }
+
+    function buildAccount() {
+        return {
+            id: Number(document.getElementById('cfgIndex').value),
+            host: document.getElementById('cfgHost').value,
+            port: Number(document.getElementById('cfgPort').value),
+            ssl: document.getElementById('cfgSsl').value === 'true',
+            authRequired: document.getElementById('cfgAuth').value === 'true',
+            username: document.getElementById('cfgUser').value,
+            password: document.getElementById('cfgPass').value,
+            from: document.getElementById('cfgFrom').value,
+            nickname: document.getElementById('cfgNick').value
+        };
+    }
+
+    async function getAllConfig() { try { setStatus(JSON.stringify(await api('/api/config/getAllConfig'), null, 2)); } catch (e) { setStatus(e.message, false); } }
+    async function getConfigById() { try { setStatus(JSON.stringify(await api(`/api/config/getConfig?index=${document.getElementById('cfgIndex').value}`), null, 2)); } catch (e) { setStatus(e.message, false); } }
+    async function addConfig() { try { setStatus(await api(`/api/config/addConfig?index=${document.getElementById('cfgIndex').value}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildAccount()) })); } catch (e) { setStatus(e.message, false); } }
+    async function updateConfig() { try { setStatus(await api(`/api/config/updateConfig?index=${document.getElementById('cfgIndex').value}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildAccount()) })); } catch (e) { setStatus(e.message, false); } }
+    async function delConfig() { try { setStatus(await api(`/api/config/delConfig?index=${document.getElementById('cfgIndex').value}`)); } catch (e) { setStatus(e.message, false); } }
+
+    function proxyPayload() {
+        return {
+            enable: document.getElementById('proxyEnable').value === 'true',
+            type: document.getElementById('proxyType').value,
+            host: document.getElementById('proxyHost').value,
+            port: Number(document.getElementById('proxyPort').value),
+            username: document.getElementById('proxyUser').value,
+            password: document.getElementById('proxyPassword').value
+        };
+    }
+    async function setProxy() { try { setStatus(await api('/api/proxy/setProxy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyPayload()) })); } catch (e) { setStatus(e.message, false); } }
+    async function unsetProxy() { try { setStatus(await api('/api/proxy/unSetProxy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyPayload()) })); } catch (e) { setStatus(e.message, false); } }
+
+    async function convertEml() {
+        try {
+            const file = document.getElementById('emlFile').files[0];
+            if (!file) throw new Error('请选择 .eml 文件');
+            const fd = new FormData();
+            fd.append('file', file);
+            const res = await fetch('/api/file/conversion', { method: 'POST', headers: { Authorization: authHeader() }, body: fd });
+            if (!res.ok) throw new Error(await res.text());
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name.replace(/\.eml$/i, '.html');
+            a.click();
+            URL.revokeObjectURL(url);
+            setStatus('EML 转换成功，HTML 已下载。');
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    async function uploadAttachments() {
+        try {
+            const files = document.getElementById('attachmentFiles').files;
+            if (!files.length) throw new Error('请先选择附件');
+            const fd = new FormData();
+            [...files].forEach(f => fd.append('file', f));
+            setStatus(await api('/api/email/uploadAttachments', { method: 'POST', body: fd }));
+            await listAttachments();
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    async function listAttachments() {
+        try {
+            const data = await api('/api/email/getUploadAttachments');
+            document.getElementById('attachmentList').textContent = JSON.stringify(data, null, 2);
+            setStatus('附件列表已刷新');
+            return data;
+        } catch (e) { setStatus(e.message, false); return {}; }
+    }
+
+    async function clearAttachments() { try { setStatus(await api('/api/email/delUploadAttachments')); await listAttachments(); } catch (e) { setStatus(e.message, false); } }
+
+    async function sendEmail() {
+        try {
+            const to = document.getElementById('sendTo').value.split(/\n|,|;/).map(v => v.trim()).filter(Boolean);
+            const subject = document.getElementById('sendSubject').value.trim();
+            const content = document.getElementById('sendContent').value;
+            const attachmentMap = await listAttachments();
+            const attachments = Object.entries(attachmentMap).map(([fileName, filePath]) => ({ fileName, filePath }));
+            const payload = { to, subject, content, attachments };
+            setStatus(await api('/api/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    async function uploadTemplateCsv() {
+        try {
+            const files = document.getElementById('customFiles').files;
+            if (!files.length) throw new Error('请选择 html/csv 文件');
+            const fd = new FormData();
+            [...files].forEach(f => fd.append('file', f));
+            setStatus(await api('/api/email/uploadTemplateAndCsv', { method: 'POST', body: fd }));
+            await listTemplateCsv();
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    async function listTemplateCsv() {
+        try {
+            const data = await api('/api/email/getUploadTemplateAndCsv');
+            document.getElementById('templateCsvList').textContent = JSON.stringify(data, null, 2);
+            const html = Object.entries(data).find(([k]) => k.toLowerCase().endsWith('.html'));
+            const csv = Object.entries(data).find(([k]) => k.toLowerCase().endsWith('.csv'));
+            if (html) document.getElementById('templatePath').value = html[1];
+            if (csv) document.getElementById('csvPath').value = csv[1];
+            setStatus('模板文件列表已刷新');
+            return data;
+        } catch (e) { setStatus(e.message, false); return {}; }
+    }
+
+    async function clearTemplateCsv() { try { setStatus(await api('/api/email/delUploadTemplateAndCsv')); await listTemplateCsv(); } catch (e) { setStatus(e.message, false); } }
+
+    async function validateCustom() {
+        try {
+            const payload = { templatePath: document.getElementById('templatePath').value, csvPath: document.getElementById('csvPath').value };
+            setStatus(await api('/api/email/validationCustomEmail', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    async function sendCustom() {
+        try {
+            const attachmentMap = await listAttachments();
+            const attachments = Object.entries(attachmentMap).map(([fileName, filePath]) => ({ fileName, filePath }));
+            const payload = {
+                templatePath: document.getElementById('templatePath').value,
+                csvPath: document.getElementById('csvPath').value,
+                attachments
+            };
+            setStatus(await api('/api/email/sendCustomEmail', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
+        } catch (e) { setStatus(e.message, false); }
+    }
+
+    loadAuth();
+    renderTabs();
+    paneHtml();
+    listAttachments();
+    listTemplateCsv();
+</script>
 </body>
 </html>
