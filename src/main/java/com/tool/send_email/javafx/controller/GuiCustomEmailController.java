@@ -50,6 +50,15 @@ public class GuiCustomEmailController implements EmailStatusCallback {
     @FXML
     private TextArea statusDisplayArea;
 
+    @FXML
+    private TextField forgeFromNicknameTextField;
+
+    @FXML
+    private TextField replyToEmailTextField;
+
+    @FXML
+    private TextField replyToNicknameTextField;
+
     @Autowired
     public GuiCustomEmailController(EmailService emailService, CustomEmailService customEmailService) {
         this.emailService = emailService;
@@ -79,7 +88,19 @@ public class GuiCustomEmailController implements EmailStatusCallback {
         // 渲染并发送邮件
         try {
             statusDisplayArea.appendText("开始发送邮件...\n");
-            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachmentFiles);
+            String forgeNick = forgeFromNicknameTextField != null ? forgeFromNicknameTextField.getText() : null;
+            if (forgeNick != null) forgeNick = forgeNick.trim();
+            if (forgeNick != null && forgeNick.isEmpty()) forgeNick = null;
+
+            String replyToEmail = replyToEmailTextField != null ? replyToEmailTextField.getText() : null;
+            if (replyToEmail != null) replyToEmail = replyToEmail.trim();
+            if (replyToEmail != null && replyToEmail.isEmpty()) replyToEmail = null;
+
+            String replyToNick = replyToNicknameTextField != null ? replyToNicknameTextField.getText() : null;
+            if (replyToNick != null) replyToNick = replyToNick.trim();
+            if (replyToNick != null && replyToNick.isEmpty()) replyToNick = null;
+
+            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachmentFiles, forgeNick, replyToEmail, replyToNick);
         } catch (Exception e) {
             statusDisplayArea.appendText("邮件发送失败: " + e.getMessage());
         }
@@ -140,12 +161,9 @@ public class GuiCustomEmailController implements EmailStatusCallback {
         if (message == null) {
             message = " ";
         }
-        // 检查 statusDisplayArea 是否为 null
         if (statusDisplayArea != null) {
             String finalMessage = message;
             Platform.runLater(() -> statusDisplayArea.appendText(finalMessage + "\n"));
-        } else {
-            logger.warn("CustomEmailController的statusDisplayArea 为 null，无法更新状态消息, 如未使用请忽略");
         }
     }
 

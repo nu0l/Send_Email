@@ -1,5 +1,6 @@
 package com.tool.send_email.springmvc.controller;
 
+import com.tool.send_email.dto.ApiResponse;
 import com.tool.send_email.dto.CustomEmailDTO;
 import com.tool.send_email.dto.ValidationTemplateDTO;
 import com.tool.send_email.service.CustomEmailService;
@@ -8,12 +9,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import com.tool.send_email.utils.UploadPathUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,12 +45,8 @@ public class WebCustomEmailController {
      */
     @PostMapping("/uploadTemplateAndCsv")
     @Operation(summary = "1. 上传HTML模板和CSV文件", description = "上传HTML模板和CSV文件(支持多文件上传)")
-    public ResponseEntity<String> uploadFiles(@Parameter(description = "选择HTML或CSV文件", required = true) @RequestParam("file") MultipartFile[] files) {
-        String uploadDir = new File(this.getClass().getResource("/").getPath(), ".tmp_uploads_templateAndCsv").getAbsolutePath();
-        File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
+    public ApiResponse<String> uploadFiles(@Parameter(description = "选择HTML或CSV文件", required = true) @RequestParam("file") MultipartFile[] files) {
+        File uploadDirFile = UploadPathUtils.resolveUploadSubdir("template-csv");
         Map<String, String> uploadResultsMap = new HashMap<>();
 
         try {
@@ -57,18 +54,18 @@ public class WebCustomEmailController {
                 String fileName = file.getOriginalFilename();
 
                 if (fileName == null || (!fileName.toLowerCase().endsWith(".html") && !fileName.toLowerCase().endsWith(".csv"))) {
-                    return ResponseEntity.badRequest().body("呵呵，无效文件类型，仅支持 .html 和 .csv 文件\n");
+                    return ApiResponse.fail(400, "无效文件类型，仅支持 .html 和 .csv 文件\n");
                 }
 
                 // 保存文件
-                File targetFile = new File(uploadDir, fileName);
+                File targetFile = new File(uploadDirFile, fileName);
                 file.transferTo(targetFile);
                 uploadResultsMap.put(fileName, targetFile.getAbsolutePath());
             }
 
-            return ResponseEntity.ok("文件上传成功:\n" + uploadResultsMap);
+            return ApiResponse.ok("文件上传成功:\n" + uploadResultsMap);
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body("文件上传失败: " + e.getMessage());
+            return ApiResponse.fail(400, "文件上传失败: " + e.getMessage());
         }
     }
 
@@ -79,10 +76,9 @@ public class WebCustomEmailController {
      */
     @GetMapping("/getUploadTemplateAndCsv")
     @Operation(summary = "2. 获取上传的HTML模板和CSV文件列表", description = "获取上传的HTML模板和CSV文件列表")
-    public ResponseEntity<Map<String, String>> getUploads() {
+    public ApiResponse<Map<String, String>> getUploads() {
         Map<String, String> uploads = new HashMap<>();
-        String uploadDir = new File(this.getClass().getResource("/").getPath(), ".tmp_uploads_templateAndCsv").getAbsolutePath();
-        File uploadDirFile = new File(uploadDir);
+        File uploadDirFile = UploadPathUtils.resolveUploadSubdir("template-csv");
         if (uploadDirFile.exists()) {
 
             File[] files = uploadDirFile.listFiles();
@@ -92,7 +88,7 @@ public class WebCustomEmailController {
                 }
             }
         }
-        return ResponseEntity.ok(uploads);
+        return ApiResponse.ok(uploads);
     }
 
     /**
@@ -102,9 +98,8 @@ public class WebCustomEmailController {
      */
     @GetMapping("/delUploadTemplateAndCsv")
     @Operation(summary = "3. 清空上传的HTML模板和CSV文件", description = "清空上传的HTML模板和CSV文件")
-    public ResponseEntity<String> delUploads() {
-        String uploadDir = new File(this.getClass().getResource("/").getPath(), ".tmp_uploads_templateAndCsv").getAbsolutePath();
-        File uploadDirFile = new File(uploadDir);
+    public ApiResponse<String> delUploads() {
+        File uploadDirFile = UploadPathUtils.resolveUploadSubdir("template-csv");
         if (uploadDirFile.exists()) {
             File[] files = uploadDirFile.listFiles();
             if (files != null) {
@@ -113,7 +108,7 @@ public class WebCustomEmailController {
                 }
             }
         }
-        return ResponseEntity.ok("文件删除成功");
+        return ApiResponse.okMessage("文件删除成功");
     }
 
     /**
@@ -125,12 +120,12 @@ public class WebCustomEmailController {
      */
     @PostMapping("/sendCustomEmail")
     @Operation(summary = "5. 发送自定义邮件", description = "发送自定义邮件")
-    public ResponseEntity<String> sendEmail(@Parameter(description = "自定义邮件参数", required = true) @RequestBody CustomEmailDTO requestBody) throws IOException {
+    public ApiResponse<String> sendEmail(@Parameter(description = "自定义邮件参数", required = true) @RequestBody CustomEmailDTO requestBody) throws IOException {
         String templatePath = requestBody.getTemplatePath();
         String csvPath = requestBody.getCsvPath();
 
         if (templatePath == null || templatePath.isEmpty() || csvPath == null || csvPath.isEmpty()) {
-            return ResponseEntity.badRequest().body("请输入模板和CSV文件路径");
+            return ApiResponse.fail(400, "请输入模板和CSV文件路径");
         }
 
         List<Map<String, String>> attachmentsList = requestBody.getAttachments();
@@ -151,12 +146,19 @@ public class WebCustomEmailController {
         }
         List<Map<String, String>> recipients = readCsv(csvPath);
         try {
-            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachments == null || attachments.isEmpty() ? null : attachments);
-            return ResponseEntity.ok("邮件正在发送中，请到控制台查看发送日志");
+            customEmailService.parseTemplateAndSendEmail(
+                    recipients,
+                    templatePath,
+                    attachments == null || attachments.isEmpty() ? null : attachments,
+                    requestBody.getForgeFromNickname(),
+                    requestBody.getReplyToEmail(),
+                    requestBody.getReplyToNickname()
+            );
+            return ApiResponse.okMessage("邮件正在发送中，请到控制台查看发送日志");
         } catch (MessagingException e) {
-            return ResponseEntity.badRequest().body("邮件发送失败");
+            return ApiResponse.fail(400, "邮件发送失败");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("邮件发送失败，系统发生错误: " + e.getMessage());
+            return ApiResponse.fail(500, "邮件发送失败，系统发生错误: " + e.getMessage());
         }
     }
 
@@ -169,19 +171,19 @@ public class WebCustomEmailController {
      */
     @PostMapping("/validationCustomEmail")
     @Operation(summary = "4. 验证自定义邮件渲染情况", description = "验证自定义邮件渲染情况")
-    public ResponseEntity<String> validationTemplate(@Parameter(description = "自定义邮件参数", required = true) @RequestBody ValidationTemplateDTO requestBody) throws IOException {
+    public ApiResponse<String> validationTemplate(@Parameter(description = "自定义邮件参数", required = true) @RequestBody ValidationTemplateDTO requestBody) throws IOException {
         String templatePath = requestBody.getTemplatePath();
         String csvPath = requestBody.getCsvPath();
 
         if (templatePath == null || templatePath.isEmpty() || csvPath == null || csvPath.isEmpty()) {
-            return ResponseEntity.badRequest().body("请输入模板和CSV文件路径");
+            return ApiResponse.fail(400, "请输入模板和CSV文件路径");
         }
         List<Map<String, String>> recipients = readCsv(csvPath);
         try {
             String s = customEmailService.validationTemplate(recipients, templatePath);
-            return ResponseEntity.ok(s);
+            return ApiResponse.ok(s);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("解析失败: " + e.getMessage());
+            return ApiResponse.fail(500, "解析失败: " + e.getMessage());
         }
     }
 

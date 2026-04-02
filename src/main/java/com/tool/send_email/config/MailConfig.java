@@ -1,5 +1,6 @@
 package com.tool.send_email.config;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,33 +50,31 @@ public class MailConfig {
             mailSender.setPort(account.getPort());
             mailSender.setUsername(account.getUsername());
             mailSender.setPassword(account.getPassword());
-            mailSender.setJavaMailProperties(getMailProperties());
+            mailSender.setJavaMailProperties(getMailPropertiesForAccount(account));
             mailSenders.add(mailSender);
         }
         return mailSenders;
     }
 
     /**
-     * 提取邮件的公共属性配置，如 SMTP 认证、TLS 启用和调试模式。
-     *
-     * @return 包含邮件公共属性的 Properties 对象
+     * 每个邮箱账户使用各自的 SMTP 属性；多账户时不再被循环覆盖为最后一项的配置。
      */
-    private Properties getMailProperties() {
+    private Properties getMailPropertiesForAccount(MailAccount account) {
         Properties properties = new Properties();
-        for (MailAccount account : accounts) {
-            properties.put("mail.smtp.auth", account.authrequired); // 开启身份验证, 匿名邮箱
-            properties.put("mail.smtp.starttls.enable", account.isSsl()); // 启用TLS加密
-            properties.put("mail.smtp.ssl.enable", account.isSsl()); // 启用SSL加密
-            properties.put("mail.smtp.localhost", "localhost"); // 设置本地主机名
-            // properties.put("mail.smtp.ssl.trust", account.host); // 信任SMTP服务器
+        properties.put("mail.smtp.auth", String.valueOf(account.isAuthrequired()));
+        properties.put("mail.smtp.starttls.enable", String.valueOf(account.isSsl()));
+        properties.put("mail.smtp.ssl.enable", String.valueOf(account.isSsl()));
+        properties.put("mail.smtp.localhost", "localhost");
+        // 关键：当我们允许“Forgery 发件人邮箱/昵称”时，不同邮件服务端会校验 SMTP 信封 MAIL FROM
+        // 是否等于已认证用户。显式设置为每个账号的授权 from，可避免 553 拒收。
+        properties.put("mail.smtp.from", account.getFrom());
 
-            // JavaMail API 通过 SOCKS5 代理来进行邮件通信代理
-            if ("socks5".equals(proxyConfig.getType())) {
-                properties.put("mail.smtp.socks.host", proxyConfig.getHost());
-                properties.put("mail.smtp.socks.port", proxyConfig.getPort());
-            }
-
+        String proxyType = proxyConfig.getType();
+        if (proxyType != null && "socks5".equalsIgnoreCase(proxyType.trim())) {
+            properties.put("mail.smtp.socks.host", proxyConfig.getHost());
+            properties.put("mail.smtp.socks.port", String.valueOf(proxyConfig.getPort()));
         }
+
         return properties;
     }
 
@@ -101,6 +100,7 @@ public class MailConfig {
         @Schema(description = "发件人昵称", example = "管理员")
         private String nickname; //邮件的发件人昵称
         @Schema(description = "是否需要身份验证", example = "true")
+        @JsonAlias({"authRequired"})
         private boolean authrequired;
     }
 }

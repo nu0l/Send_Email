@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
-<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiReadMeController">
+<VBox maxHeight="Infinity" maxWidth="Infinity" spacing="12.0" styleClass="page-root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiReadMeController">
    <children>
-   
-       <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
-   
-       <WebView fx:id="webView" layoutY="53.0" prefHeight="504.0" prefWidth="550.0" />
+      <VBox maxHeight="Infinity" maxWidth="Infinity" styleClass="section-card web-shell" VBox.vgrow="ALWAYS">
+         <children>
+            <Label styleClass="section-title" text="使用说明" />
+            <Separator styleClass="sep" />
+            <WebView fx:id="webView" maxHeight="Infinity" maxWidth="Infinity" minHeight="400.0" VBox.vgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+         </padding>
+      </VBox>
    </children>
-
-</AnchorPane>
+</VBox>

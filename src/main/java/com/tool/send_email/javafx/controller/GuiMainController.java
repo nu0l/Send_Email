@@ -3,6 +3,7 @@ package com.tool.send_email.javafx.controller;
 import com.tool.send_email.StartApplicationMain;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,12 @@ public class GuiMainController {
     @FXML
     private Button customEmailButton;
     @FXML
+    private Button proxyButton;
+    @FXML
+    private Button activityButton;
+    @FXML
+    private Button drillButton;
+    @FXML
     private AnchorPane contentPane;
 
     public GuiMainController() {
@@ -42,6 +49,15 @@ public class GuiMainController {
         emlToHtmlButton.setOnAction(event -> loadView("/static/views/fxml/emlToHtmlControllerView.fxml"));
         sendEmailButton.setOnAction(event -> loadView("/static/views/fxml/SendEMailControllerView.fxml"));
         customEmailButton.setOnAction(event -> loadView("/static/views/fxml/CustomEmailControllerView.fxml"));
+        if (proxyButton != null) {
+            proxyButton.setOnAction(event -> loadView("/static/views/fxml/ProxyControllerView.fxml"));
+        }
+        if (activityButton != null) {
+            activityButton.setOnAction(event -> loadView("/static/views/fxml/ActivityControllerView.fxml"));
+        }
+        if (drillButton != null) {
+            drillButton.setOnAction(event -> loadView("/static/views/fxml/DrillTemplatesControllerView.fxml"));
+        }
     }
 
     /**
@@ -53,10 +69,12 @@ public class GuiMainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setControllerFactory(StartApplicationMain.getContext()::getBean);
-            AnchorPane newView = loader.load();
-            newView.setPrefWidth(346.0);
-            newView.setPrefHeight(346.0);
+            Parent newView = loader.load();
             contentPane.getChildren().setAll(newView);
+            AnchorPane.setTopAnchor(newView, 0.0);
+            AnchorPane.setRightAnchor(newView, 0.0);
+            AnchorPane.setBottomAnchor(newView, 0.0);
+            AnchorPane.setLeftAnchor(newView, 0.0);
         } catch (IOException e) {
             e.printStackTrace();
         }

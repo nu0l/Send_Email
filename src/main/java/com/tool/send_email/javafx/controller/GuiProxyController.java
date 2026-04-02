@@ -30,7 +30,7 @@ public class GuiProxyController {
     }
 
     @FXML
-    private ComboBox proxyTypeComboBox;
+    private ComboBox<String> proxyTypeComboBox;
     @FXML
     private TextField proxyHostTextField;
     @FXML
@@ -40,7 +40,7 @@ public class GuiProxyController {
     @FXML
     private TextField proxyPasswordTextField;
     @FXML
-    private Button saveProxySettingButton;
+    private Button btnSaveProxy;
     @FXML
     private ToggleGroup proxyToggleGroup;
     @FXML
@@ -70,6 +70,12 @@ public class GuiProxyController {
         // 初始化默认状态
         enable = enableRadioButton.isSelected(); // 根据默认选择更新 enable 的值
         logger.info(enable ? "代理默认开启" : "代理默认关闭");
+
+        if (proxyTypeComboBox != null
+                && !proxyTypeComboBox.getItems().isEmpty()
+                && proxyTypeComboBox.getValue() == null) {
+            proxyTypeComboBox.getSelectionModel().selectFirst();
+        }
     }
 
     // 获取代理启用状态的方法
@@ -79,37 +85,71 @@ public class GuiProxyController {
 
 
     @FXML
-    public void saveProxySettingButton() {
-        // 使用信息类型的弹窗
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("代理状态");
-        alert.setHeaderText("Jvav");
+    public void handleSaveProxySettings() {
+        boolean proxyOn = enableRadioButton != null && enableRadioButton.isSelected();
+        enable = proxyOn;
 
-        if (enable) {
-            String type = proxyTypeComboBox.getValue().toString();
-            String host = proxyHostTextField.getText();
-            String port = proxyPortTextField.getText();
-            String username = proxyUsernameTextField.getText();
-            String password = proxyPasswordTextField.getText();
-
-            if (!type.isEmpty() || !host.isEmpty() || !port.isEmpty()) {
-                username = username.isEmpty() ? null : username;
-                password = password.isEmpty() ? null : password;
-                proxyService.setProxy(new Proxy(enable, type, host, Integer.parseInt(port), username, password));
-
-                // 设置弹窗内容并显示
-                alert.setContentText("代理设置已保存\n");
-                alert.showAndWait();
-                notifyStatus(String.format("代理设置已应用: %s://%s:%s", type, host, port));
-            }
-        } else {
-            proxyService.unsetProxy(new Proxy(enable, null, null, 0, null, null));
-
-            // 设置弹窗内容并显示
-            alert.setContentText("代理设置已关闭");
+        if (!proxyOn) {
+            proxyService.unsetProxy(new Proxy(false, null, null, 0, null, null));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("代理");
+            alert.setHeaderText(null);
+            alert.setContentText("代理已关闭。");
             alert.showAndWait();
             notifyStatus("代理设置已清空");
+            return;
         }
+
+        String type = proxyTypeComboBox != null && proxyTypeComboBox.getValue() != null
+                ? proxyTypeComboBox.getValue().trim()
+                : "";
+        String host = safeTrim(proxyHostTextField != null ? proxyHostTextField.getText() : null);
+        String portStr = safeTrim(proxyPortTextField != null ? proxyPortTextField.getText() : null);
+
+        if (type.isEmpty() || host.isEmpty() || portStr.isEmpty()) {
+            Alert warn = new Alert(Alert.AlertType.WARNING);
+            warn.setTitle("代理配置不完整");
+            warn.setHeaderText(null);
+            warn.setContentText("启用代理时，请选择协议并填写主机与端口。");
+            warn.showAndWait();
+            return;
+        }
+
+        int port;
+        try {
+            port = Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            Alert err = new Alert(Alert.AlertType.ERROR);
+            err.setTitle("端口无效");
+            err.setHeaderText(null);
+            err.setContentText("端口必须是有效数字。");
+            err.showAndWait();
+            return;
+        }
+
+        String username = safeTrimOrNull(proxyUsernameTextField != null ? proxyUsernameTextField.getText() : null);
+        String password = safeTrimOrNull(proxyPasswordTextField != null ? proxyPasswordTextField.getText() : null);
+
+        proxyService.setProxy(new Proxy(true, type, host, port, username, password));
+
+        Alert ok = new Alert(Alert.AlertType.INFORMATION);
+        ok.setTitle("代理");
+        ok.setHeaderText(null);
+        ok.setContentText("代理设置已保存。");
+        ok.showAndWait();
+        notifyStatus(String.format("代理设置已应用: %s://%s:%d", type, host, port));
+    }
+
+    private static String safeTrim(String s) {
+        return s == null ? "" : s.trim();
+    }
+
+    private static String safeTrimOrNull(String s) {
+        if (s == null) {
+            return null;
+        }
+        String t = s.trim();
+        return t.isEmpty() ? null : t;
     }
 
     /**

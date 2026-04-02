@@ -6,12 +6,13 @@
 
     <groupId>com.tool</groupId>
     <artifactId>Send_Email</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>17.0.13</javafx.version>
-        <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+        <!-- 2.7.x 为支持 Java 8 的最后主线；依赖与校验栈更一致 -->
+        <spring-boot.version>2.7.18</spring-boot.version>
 
         <!-- 打包版本jdk1.8, 有需要其他版本请修改以下配置 -->
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -57,6 +58,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- starter 仅传递 jakarta.validation-api；Spring MVC / Boot 自动配置仍解析 javax.validation.*，必须打进 fat jar -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
         </dependency>
         <!--
         <dependency>
@@ -138,6 +148,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>send_email</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -155,8 +166,6 @@
                 </executions>
                 <configuration>
                     <executable>true</executable>
-                    <finalName>send_email</finalName>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -15,14 +15,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and()
-                // 禁用 CSRF 对 /api 路径的保护
-                .csrf().ignoringAntMatchers("/api/**").and()
-                // 配置表单登录
-                .formLogin().permitAll().and() // 允许所有人访问登录页面
-                // 配置授权请求
-                .authorizeRequests().antMatchers("/login", "/logout").permitAll() // 允许所有人访问登录和注销页面
-                .antMatchers("/api/**").authenticated() // 只有认证用户才能访问 /api 路径下的资源
-                .anyRequest().authenticated(); // 其他请求需要认证
+        http
+                .csrf()
+                .ignoringAntMatchers("/api/**", "/login", "/logout")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/login", "/login.html").permitAll()
+                .antMatchers("/js/**", "/css/**", "/favicon.ico").permitAll()
+                .antMatchers(
+                        "/GUI_README.html",
+                        "/error",
+                        "/1213300000/swagger-ui.html",
+                        "/1213300000/swagger-ui/**",
+                        "/1213300000/api-docs/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**"
+                ).permitAll()
+                .antMatchers("/api/**", "/index", "/index.html").authenticated()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/index", true)
+                .failureUrl("/login?error")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=1")
+                .permitAll();
     }
 }

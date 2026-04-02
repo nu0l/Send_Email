@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<VBox prefHeight="640.0" prefWidth="588.0" spacing="10" style="-fx-background-color: #f4f4f4; -fx-padding: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiMainController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<VBox prefHeight="720.0" prefWidth="780.0" spacing="0" styleClass="main-root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiMainController">
    <children>
-   
-       <!-- 按钮菜单 -->
-       <HBox alignment="CENTER_LEFT" spacing="10">
-      <children>
-          <Button fx:id="readMeButton" style="-fx-font-size: 14px;" text="说明" HBox.hgrow="ALWAYS" />
-          <Button fx:id="configButton" style="-fx-font-size: 14px;" text="邮件配置" HBox.hgrow="ALWAYS" />
-          <Button fx:id="emlToHtmlButton" style="-fx-font-size: 14px;" text="html转换" HBox.hgrow="ALWAYS" />
-          <Button fx:id="sendEmailButton" style="-fx-font-size: 14px;" text="发送邮件" HBox.hgrow="ALWAYS" />
-          <Button fx:id="customEmailButton"  style="-fx-font-size: 14px;" text="定制化邮件" HBox.hgrow="ALWAYS" />
-      </children>
-       </HBox>
-      <Separator prefHeight="0.0" prefWidth="436.0" />
-       <AnchorPane fx:id="contentPane" prefHeight="386.0" prefWidth="475.0" />
+      <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-bar">
+         <padding>
+            <Insets bottom="12.0" left="20.0" right="20.0" top="12.0" />
+         </padding>
+         <children>
+            <Label styleClass="nav-brand" text="Send Email" />
+            <Region HBox.hgrow="ALWAYS" />
+            <FlowPane alignment="CENTER_RIGHT" hgap="8.0" maxWidth="Infinity" prefWrapLength="720.0" styleClass="nav-actions" vgap="8.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button fx:id="readMeButton" mnemonicParsing="false" styleClass="nav-button" text="说明" />
+                  <Button fx:id="configButton" mnemonicParsing="false" styleClass="nav-button" text="邮件配置" />
+                  <Button fx:id="proxyButton" mnemonicParsing="false" styleClass="nav-button" text="代理" />
+                  <Button fx:id="emlToHtmlButton" mnemonicParsing="false" styleClass="nav-button" text="EML 转 HTML" />
+                  <Button fx:id="customEmailButton" mnemonicParsing="false" styleClass="nav-button" text="模板邮件" />
+                  <Button fx:id="activityButton" mnemonicParsing="false" styleClass="nav-button" text="统计" />
+                  <Button fx:id="drillButton" mnemonicParsing="false" styleClass="nav-button" text="演练模板" />
+                  <Button fx:id="sendEmailButton" mnemonicParsing="false" styleClass="nav-button nav-button-primary" text="发送邮件" />
+               </children>
+            </FlowPane>
+         </children>
+      </HBox>
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+         <content>
+            <AnchorPane fx:id="contentPane" minHeight="480.0" minWidth="620.0" styleClass="content-host">
+               <padding>
+                  <Insets bottom="12.0" left="16.0" right="16.0" top="12.0" />
+               </padding>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
    </children>
-
 </VBox>

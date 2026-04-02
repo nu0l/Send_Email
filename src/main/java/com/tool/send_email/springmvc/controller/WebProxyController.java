@@ -1,5 +1,6 @@
 package com.tool.send_email.springmvc.controller;
 
+import com.tool.send_email.dto.ApiResponse;
 import com.tool.send_email.model.Proxy;
 import com.tool.send_email.service.ProxyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,7 +8,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,12 +33,12 @@ public class WebProxyController {
      */
     @PostMapping("/setProxy")
     @Operation(summary = "1. 设置代理", description = "设置代理")
-    public ResponseEntity<String> setProxy(@Parameter(description = "代理配置", required = true) @RequestBody Proxy proxy) {
+    public ApiResponse<String> setProxy(@Parameter(description = "代理配置", required = true) @RequestBody Proxy proxy) {
         try {
             proxyService.setProxy(proxy);
-            return ResponseEntity.ok("代理设置已保存");
+            return ApiResponse.okMessage("代理设置已保存");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("代理设置保存失败");
+            return ApiResponse.fail(500, "代理设置保存失败");
         }
     }
 
@@ -49,12 +49,12 @@ public class WebProxyController {
      */
     @PostMapping("/unSetProxy")
     @Operation(summary = "2. 清空代理", description = "清空代理")
-    public ResponseEntity<String> unsetProxy(@Parameter(description = "代理配置", required = true) @RequestBody Proxy proxy) {
+    public ApiResponse<String> unsetProxy(@Parameter(description = "代理配置", required = true) @RequestBody Proxy proxy) {
         try {
             proxyService.unsetProxy(proxy);
-            return ResponseEntity.ok("代理设置已取消");
+            return ApiResponse.okMessage("代理设置已取消");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("代理设置取消失败");
+            return ApiResponse.fail(500, "代理设置取消失败");
         }
     }
 

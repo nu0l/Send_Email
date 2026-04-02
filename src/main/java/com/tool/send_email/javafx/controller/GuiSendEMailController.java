@@ -50,6 +50,12 @@ public class GuiSendEMailController implements EmailStatusCallback {
     @FXML
     private Button addAttachmentsButton;
     @FXML
+    private TextField forgeFromNicknameTextField;
+    @FXML
+    private TextField replyToEmailTextField;
+    @FXML
+    private TextField replyToNicknameTextField;
+    @FXML
     private TextArea statusDisplayArea;
     public GuiSendEMailController() {
         this.emailService = null;
@@ -73,7 +79,32 @@ public class GuiSendEMailController implements EmailStatusCallback {
         }
         List<String> recipientList = Arrays.asList(recipientEmails.split(",\\s*"));
 
-        Email email = new Email(recipientList, subject, content, attachmentFiles.isEmpty() ? null : attachmentFiles);
+        Email email = new Email(recipientList, subject, content, attachmentFiles.isEmpty() ? null : attachmentFiles, "GUI");
+
+        // 本地研究测试：只改显示昵称/Reply-To，不改 From 邮箱认证用户
+        String fromNick = forgeFromNicknameTextField != null ? forgeFromNicknameTextField.getText() : null;
+        if (fromNick != null) {
+            fromNick = fromNick.trim();
+            if (!fromNick.isEmpty()) {
+                email.setForgeFromNickname(fromNick);
+            }
+        }
+
+        String replyToEmail = replyToEmailTextField != null ? replyToEmailTextField.getText() : null;
+        if (replyToEmail != null) {
+            replyToEmail = replyToEmail.trim();
+            if (!replyToEmail.isEmpty()) {
+                email.setReplyToEmail(replyToEmail);
+            }
+        }
+
+        String replyToNick = replyToNicknameTextField != null ? replyToNicknameTextField.getText() : null;
+        if (replyToNick != null) {
+            replyToNick = replyToNick.trim();
+            if (!replyToNick.isEmpty()) {
+                email.setReplyToNickname(replyToNick);
+            }
+        }
 
         statusDisplayArea.appendText("邮件发送中，请稍候...\n");
 
@@ -172,13 +203,9 @@ public class GuiSendEMailController implements EmailStatusCallback {
         if (message == null) {
             message = " ";
         }
-        // 检查 statusDisplayArea 是否为 null
-        if (statusDisplayArea != null) {
-            String finalMessage = message;
-            Platform.runLater(() -> statusDisplayArea.appendText(finalMessage + "\n"));
-        } else {
-            logger.warn("SendEMailController的statusDisplayArea 为 null，无法更新状态消息, 如未使用请忽略");
-        }
+        if (statusDisplayArea == null) return;
+        String finalMessage = message;
+        Platform.runLater(() -> statusDisplayArea.appendText(finalMessage + "\n"));
     }
 
     @Override

@@ -1,4 +1,12 @@
+# GitHub Linguist 语言统计配置
+# Java 文件强制识别为 Java
 *.java linguist-language=Java
+
+# 前端文件排除统计
 *.html linguist-vendored
 *.css linguist-vendored
 *.js linguist-vendored
+
+# 排除编译输出目录
+/target/** linguist-vendored
+target/ linguist-vendored

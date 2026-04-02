@@ -6,421 +6,281 @@
     <title>Send Email Web Console</title>
     <style>
         :root {
-            --bg: #f6f8fb;
-            --card: #ffffff;
-            --text: #1f2d3d;
-            --muted: #5e6b7a;
-            --primary: #1663e2;
-            --border: #dbe4f0;
-            --ok: #0f9d58;
-            --error: #d93025;
+            --bg-top: #0f172a;
+            --bg-mid: #1e293b;
+            --surface: #ffffff;
+            --surface-muted: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --ok: #059669;
+            --error: #dc2626;
+            --radius: 14px;
+            --shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+            --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
         }
 
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--bg);
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(165deg, var(--bg-top) 0%, var(--bg-mid) 38%, #e2e8f0 38%, #f1f5f9 100%);
+            min-height: 100vh;
             color: var(--text);
         }
 
-        .layout {
-            max-width: 1200px;
+        .shell {
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 28px 20px 48px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(79, 70, 229, 0.92) 100%);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-card);
+        }
+        .hero h1 {
+            margin: 0 0 8px;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .hero p {
+            margin: 0;
+            opacity: 0.92;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            max-width: 640px;
+        }
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .hero-badge {
+            background: rgba(255,255,255,0.18);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 12px;
         }
 
         .card {
-            background: var(--card);
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-card);
         }
+        .card.compact { padding: 14px 18px; }
 
-        h1, h2 { margin-top: 0; }
-        h1 { font-size: 1.8rem; margin-bottom: 8px; }
-        h2 { font-size: 1.15rem; margin-bottom: 12px; }
-        p, label, small { color: var(--muted); }
+        h2 {
+            margin: 0 0 14px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        label, .hint { color: var(--muted); font-size: 13px; display: block; margin-bottom: 6px; }
+        .hint { margin-top: 8px; margin-bottom: 0; }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
         }
 
-        .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-        input, textarea, select, button {
+        input, textarea, select {
             width: 100%;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 9px 10px;
+            border-radius: 10px;
+            padding: 10px 12px;
             font-size: 14px;
+            background: var(--surface);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        textarea { min-height: 120px; resize: vertical; }
 
-        textarea { min-height: 110px; resize: vertical; }
-
-        button {
+        button, .btn-link {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
             background: var(--primary);
             color: #fff;
-            border: none;
-            cursor: pointer;
-            width: auto;
-            min-width: 90px;
         }
-
-        button.secondary { background: #516274; }
-        button.danger { background: #c0392b; }
-
-        .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-        .tab {
-            border: 1px solid var(--border);
-            background: #fff;
+        button:hover { background: var(--primary-hover); }
+        button:active { transform: scale(0.98); }
+        button.secondary:hover { background: #334155; }
+        button.danger:hover { background: #991b1b; }
+        button.ghost:hover { background: #e2e8f0; }
+        button.tab:hover {
+            background: var(--surface-muted);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        button.tab.active:hover {
+            background: var(--primary-hover);
+            color: #fff;
+            border-color: var(--primary-hover);
+        }
+        button.secondary { background: #475569; color: #fff; }
+        button.danger { background: #b91c1c; color: #fff; }
+        button.ghost {
+            background: var(--surface-muted);
             color: var(--text);
-            padding: 8px 12px;
+            border: 1px solid var(--border);
+        }
+        button.tab {
+            background: var(--surface-muted);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
             border-radius: 999px;
         }
-        .tab.active { background: var(--primary); color: #fff; }
+        button.tab.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
 
-        .pane { display: none; }
-        .pane.active { display: block; }
+        .tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pane { display: none !important; animation: fadeIn 0.2s ease; }
+        .pane.active { display: block !important; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .inner-card {
+            background: var(--surface-muted);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            margin-top: 12px;
+        }
 
         #status {
             white-space: pre-wrap;
-            background: #f2f6fc;
-            border-radius: 8px;
-            padding: 12px;
-            max-height: 250px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            max-height: 280px;
             overflow: auto;
-            font-size: 13px;
+            font-size: 12px;
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            line-height: 1.45;
+        }
+        #status.success { box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.35); }
+        #status.error { box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.45); }
+
+        code.inline {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
         }
 
-        .success { color: var(--ok); }
-        .error { color: var(--error); }
-        code { background: #eef3fb; padding: 1px 6px; border-radius: 6px; }
+        .toolbar-log {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            background: #475569;
+            color: #fff !important;
+        }
+        .btn-link:hover { background: #334155; }
+
+        @media (max-width: 600px) {
+            .hero { padding: 22px; }
+            .shell { padding: 16px 12px 32px; }
+        }
     </style>
 </head>
 <body>
-<div class="layout">
-    <div class="card">
+<div class="shell">
+    <header class="hero">
         <h1>Send Email Web Console</h1>
-        <p>在一个界面完成配置、附件管理、邮件发送、模板邮件及 eml 转 html。</p>
-        <div class="grid">
-            <div>
-                <label>用户名</label>
-                <input id="authUser" placeholder="Spring Security 用户名">
-            </div>
-            <div>
-                <label>密码</label>
-                <input id="authPass" type="password" placeholder="Spring Security 密码">
+        <p>在同一页面完成邮箱配置、代理、附件与模板文件管理、普通发送、模板群发及 EML 转 HTML。界面采用卡片分区，便于按步骤操作。</p>
+        <div class="hero-badges">
+            <span class="hero-badge">浏览器会话登录（Cookie）</span>
+            <span class="hero-badge">多账户轮询发送</span>
+            <span class="hero-badge">Thymeleaf 模板 + CSV</span>
+            <span class="hero-badge">发送统计 · 演练模板</span>
+        </div>
+        <div class="session-bar" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.25);">
+            <span id="sessionUser" style="font-size:14px;opacity:.95;">载入中…</span>
+            <div class="row" style="gap:10px;">
+                <a class="btn-link" href="1213300000/swagger-ui.html" target="_blank" rel="noopener" style="font-size:13px;padding:8px 14px;">Swagger UI</a>
+                <form method="post" action="logout" style="margin:0;">
+                    <button type="submit" style="border:none;border-radius:10px;padding:8px 16px;font-size:13px;cursor:pointer;background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.35);font-weight:500;">退出登录</button>
+                </form>
             </div>
         </div>
-        <div class="row" style="margin-top: 10px;">
-            <button onclick="saveAuth()">保存认证信息</button>
-            <a href="/1213300000/swagger-ui.html" target="_blank"><button class="secondary" type="button">打开 Swagger-UI</button></a>
-        </div>
-    </div>
+    </header>
 
-    <div class="card">
-        <div class="tabs" id="tabs"></div>
-    </div>
+    <section class="card compact">
+        <h2 style="margin-bottom:10px;">功能模块</h2>
+        <div class="tab-bar" id="tabs" role="tablist"></div>
+    </section>
 
     <div id="panes"></div>
 
-    <div class="card">
-        <h2>操作日志</h2>
-        <div id="status">等待操作...</div>
-    </div>
+    <section class="card" aria-labelledby="log-title">
+        <div class="toolbar-log">
+            <h2 id="log-title" style="margin:0;">操作日志</h2>
+            <button type="button" class="ghost" onclick="clearLog()">清空日志</button>
+        </div>
+        <div id="status" class="success" role="log" aria-live="polite">等待操作…</div>
+    </section>
 </div>
 
 <script>
-    const paneDefs = [
-        { id: 'config', title: '邮箱配置' },
-        { id: 'proxy', title: '代理设置' },
-        { id: 'convert', title: 'EML 转 HTML' },
-        { id: 'attachment', title: '附件管理' },
-        { id: 'send', title: '普通发送' },
-        { id: 'custom', title: '模板邮件' }
-    ];
-
-    const tabsEl = document.getElementById('tabs');
-    const panesEl = document.getElementById('panes');
-
-    function setStatus(msg, ok = true) {
-        const el = document.getElementById('status');
-        const time = new Date().toLocaleTimeString();
-        el.innerText = `[${time}] ${msg}\n\n` + el.innerText;
-        el.className = ok ? 'success' : 'error';
-    }
-
-    function authHeader() {
-        const user = document.getElementById('authUser').value.trim();
-        const pass = document.getElementById('authPass').value;
-        if (!user || !pass) {
-            throw new Error('请先填写用户名和密码并保存');
-        }
-        return 'Basic ' + btoa(`${user}:${pass}`);
-    }
-
-    async function api(path, options = {}) {
-        const headers = Object.assign({}, options.headers || {}, { Authorization: authHeader() });
-        const res = await fetch(path, { ...options, headers });
-        const text = await res.text();
-        if (!res.ok) throw new Error(text || `请求失败: ${res.status}`);
-        try { return JSON.parse(text); } catch { return text; }
-    }
-
-    function saveAuth() {
-        localStorage.setItem('sendEmail.web.authUser', document.getElementById('authUser').value);
-        localStorage.setItem('sendEmail.web.authPass', document.getElementById('authPass').value);
-        setStatus('认证信息已保存到浏览器。');
-    }
-
-    function loadAuth() {
-        document.getElementById('authUser').value = localStorage.getItem('sendEmail.web.authUser') || '';
-        document.getElementById('authPass').value = localStorage.getItem('sendEmail.web.authPass') || '';
-    }
-
-    function renderTabs() {
-        paneDefs.forEach((d, i) => {
-            const tab = document.createElement('button');
-            tab.className = 'tab' + (i === 0 ? ' active' : '');
-            tab.innerText = d.title;
-            tab.onclick = () => activatePane(d.id);
-            tabsEl.appendChild(tab);
-
-            const pane = document.createElement('div');
-            pane.className = 'card pane' + (i === 0 ? ' active' : '');
-            pane.id = 'pane-' + d.id;
-            panesEl.appendChild(pane);
-        });
-    }
-
-    function activatePane(id) {
-        document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', paneDefs[i].id === id));
-        document.querySelectorAll('.pane').forEach(el => el.classList.toggle('active', el.id === 'pane-' + id));
-    }
-
-    function paneHtml() {
-        document.getElementById('pane-config').innerHTML = `
-            <h2>邮箱配置管理</h2>
-            <div class="grid">
-                <input id="cfgIndex" type="number" placeholder="配置 ID (0开始)">
-                <input id="cfgHost" placeholder="SMTP 主机">
-                <input id="cfgPort" type="number" placeholder="端口">
-                <input id="cfgUser" placeholder="用户名">
-                <input id="cfgPass" placeholder="密码/授权码">
-                <input id="cfgFrom" placeholder="From 邮箱">
-                <input id="cfgNick" placeholder="昵称">
-                <select id="cfgSsl"><option value="true">SSL=true</option><option value="false">SSL=false</option></select>
-                <select id="cfgAuth"><option value="true">匿名=true</option><option value="false">匿名=false</option></select>
-            </div>
-            <div class="row" style="margin-top:10px;">
-                <button onclick="getAllConfig()">查询全部</button>
-                <button onclick="getConfigById()">按ID查询</button>
-                <button onclick="addConfig()">新增</button>
-                <button onclick="updateConfig()">更新</button>
-                <button class="danger" onclick="delConfig()">删除</button>
-            </div>`;
-
-        document.getElementById('pane-proxy').innerHTML = `
-            <h2>代理设置</h2>
-            <div class="grid">
-                <select id="proxyEnable"><option value="true">启用</option><option value="false">禁用</option></select>
-                <select id="proxyType"><option>HTTP</option><option>SOCKS4</option><option>SOCKS5</option></select>
-                <input id="proxyHost" placeholder="127.0.0.1">
-                <input id="proxyPort" type="number" placeholder="7890">
-                <input id="proxyUser" placeholder="代理用户名(可选)">
-                <input id="proxyPassword" placeholder="代理密码(可选)">
-            </div>
-            <div class="row" style="margin-top:10px;">
-                <button onclick="setProxy()">保存代理</button>
-                <button class="danger" onclick="unsetProxy()">清空代理</button>
-            </div>`;
-
-        document.getElementById('pane-convert').innerHTML = `
-            <h2>EML 转 HTML</h2>
-            <input id="emlFile" type="file" accept=".eml">
-            <div class="row" style="margin-top:10px;"><button onclick="convertEml()">上传并下载 HTML</button></div>`;
-
-        document.getElementById('pane-attachment').innerHTML = `
-            <h2>附件管理</h2>
-            <input id="attachmentFiles" type="file" multiple>
-            <div class="row" style="margin-top:10px;">
-                <button onclick="uploadAttachments()">上传附件</button>
-                <button onclick="listAttachments()">刷新列表</button>
-                <button class="danger" onclick="clearAttachments()">清空附件</button>
-            </div>
-            <small>当前附件（发送邮件/模板邮件时可直接引用）：<code id="attachmentList">[]</code></small>`;
-
-        document.getElementById('pane-send').innerHTML = `
-            <h2>普通邮件发送</h2>
-            <div class="grid">
-                <textarea id="sendTo" placeholder="收件人，每行一个"></textarea>
-                <textarea id="sendSubject" placeholder="主题"></textarea>
-            </div>
-            <textarea id="sendContent" placeholder="HTML 或文本正文"></textarea>
-            <small>附件来自“附件管理”中的已上传列表</small>
-            <div class="row" style="margin-top:10px;"><button onclick="sendEmail()">立即发送</button></div>`;
-
-        document.getElementById('pane-custom').innerHTML = `
-            <h2>模板邮件（HTML + CSV）</h2>
-            <input id="customFiles" type="file" multiple accept=".html,.csv">
-            <div class="row" style="margin-top:10px;">
-                <button onclick="uploadTemplateCsv()">上传模板与CSV</button>
-                <button onclick="listTemplateCsv()">刷新文件列表</button>
-                <button class="danger" onclick="clearTemplateCsv()">清空模板文件</button>
-            </div>
-            <small>可用文件：<code id="templateCsvList">[]</code></small>
-            <div class="grid" style="margin-top:10px;">
-                <input id="templatePath" placeholder="模板文件完整路径">
-                <input id="csvPath" placeholder="CSV文件完整路径">
-            </div>
-            <div class="row" style="margin-top:10px;">
-                <button class="secondary" onclick="validateCustom()">渲染预览验证</button>
-                <button onclick="sendCustom()">发送模板邮件</button>
-            </div>`;
-    }
-
-    function buildAccount() {
-        return {
-            id: Number(document.getElementById('cfgIndex').value),
-            host: document.getElementById('cfgHost').value,
-            port: Number(document.getElementById('cfgPort').value),
-            ssl: document.getElementById('cfgSsl').value === 'true',
-            authRequired: document.getElementById('cfgAuth').value === 'true',
-            username: document.getElementById('cfgUser').value,
-            password: document.getElementById('cfgPass').value,
-            from: document.getElementById('cfgFrom').value,
-            nickname: document.getElementById('cfgNick').value
-        };
-    }
-
-    async function getAllConfig() { try { setStatus(JSON.stringify(await api('/api/config/getAllConfig'), null, 2)); } catch (e) { setStatus(e.message, false); } }
-    async function getConfigById() { try { setStatus(JSON.stringify(await api(`/api/config/getConfig?index=${document.getElementById('cfgIndex').value}`), null, 2)); } catch (e) { setStatus(e.message, false); } }
-    async function addConfig() { try { setStatus(await api(`/api/config/addConfig?index=${document.getElementById('cfgIndex').value}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildAccount()) })); } catch (e) { setStatus(e.message, false); } }
-    async function updateConfig() { try { setStatus(await api(`/api/config/updateConfig?index=${document.getElementById('cfgIndex').value}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildAccount()) })); } catch (e) { setStatus(e.message, false); } }
-    async function delConfig() { try { setStatus(await api(`/api/config/delConfig?index=${document.getElementById('cfgIndex').value}`)); } catch (e) { setStatus(e.message, false); } }
-
-    function proxyPayload() {
-        return {
-            enable: document.getElementById('proxyEnable').value === 'true',
-            type: document.getElementById('proxyType').value,
-            host: document.getElementById('proxyHost').value,
-            port: Number(document.getElementById('proxyPort').value),
-            username: document.getElementById('proxyUser').value,
-            password: document.getElementById('proxyPassword').value
-        };
-    }
-    async function setProxy() { try { setStatus(await api('/api/proxy/setProxy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyPayload()) })); } catch (e) { setStatus(e.message, false); } }
-    async function unsetProxy() { try { setStatus(await api('/api/proxy/unSetProxy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyPayload()) })); } catch (e) { setStatus(e.message, false); } }
-
-    async function convertEml() {
-        try {
-            const file = document.getElementById('emlFile').files[0];
-            if (!file) throw new Error('请选择 .eml 文件');
-            const fd = new FormData();
-            fd.append('file', file);
-            const res = await fetch('/api/file/conversion', { method: 'POST', headers: { Authorization: authHeader() }, body: fd });
-            if (!res.ok) throw new Error(await res.text());
-            const blob = await res.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = file.name.replace(/\.eml$/i, '.html');
-            a.click();
-            URL.revokeObjectURL(url);
-            setStatus('EML 转换成功，HTML 已下载。');
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    async function uploadAttachments() {
-        try {
-            const files = document.getElementById('attachmentFiles').files;
-            if (!files.length) throw new Error('请先选择附件');
-            const fd = new FormData();
-            [...files].forEach(f => fd.append('file', f));
-            setStatus(await api('/api/email/uploadAttachments', { method: 'POST', body: fd }));
-            await listAttachments();
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    async function listAttachments() {
-        try {
-            const data = await api('/api/email/getUploadAttachments');
-            document.getElementById('attachmentList').textContent = JSON.stringify(data, null, 2);
-            setStatus('附件列表已刷新');
-            return data;
-        } catch (e) { setStatus(e.message, false); return {}; }
-    }
-
-    async function clearAttachments() { try { setStatus(await api('/api/email/delUploadAttachments')); await listAttachments(); } catch (e) { setStatus(e.message, false); } }
-
-    async function sendEmail() {
-        try {
-            const to = document.getElementById('sendTo').value.split(/\n|,|;/).map(v => v.trim()).filter(Boolean);
-            const subject = document.getElementById('sendSubject').value.trim();
-            const content = document.getElementById('sendContent').value;
-            const attachmentMap = await listAttachments();
-            const attachments = Object.entries(attachmentMap).map(([fileName, filePath]) => ({ fileName, filePath }));
-            const payload = { to, subject, content, attachments };
-            setStatus(await api('/api/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    async function uploadTemplateCsv() {
-        try {
-            const files = document.getElementById('customFiles').files;
-            if (!files.length) throw new Error('请选择 html/csv 文件');
-            const fd = new FormData();
-            [...files].forEach(f => fd.append('file', f));
-            setStatus(await api('/api/email/uploadTemplateAndCsv', { method: 'POST', body: fd }));
-            await listTemplateCsv();
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    async function listTemplateCsv() {
-        try {
-            const data = await api('/api/email/getUploadTemplateAndCsv');
-            document.getElementById('templateCsvList').textContent = JSON.stringify(data, null, 2);
-            const html = Object.entries(data).find(([k]) => k.toLowerCase().endsWith('.html'));
-            const csv = Object.entries(data).find(([k]) => k.toLowerCase().endsWith('.csv'));
-            if (html) document.getElementById('templatePath').value = html[1];
-            if (csv) document.getElementById('csvPath').value = csv[1];
-            setStatus('模板文件列表已刷新');
-            return data;
-        } catch (e) { setStatus(e.message, false); return {}; }
-    }
-
-    async function clearTemplateCsv() { try { setStatus(await api('/api/email/delUploadTemplateAndCsv')); await listTemplateCsv(); } catch (e) { setStatus(e.message, false); } }
-
-    async function validateCustom() {
-        try {
-            const payload = { templatePath: document.getElementById('templatePath').value, csvPath: document.getElementById('csvPath').value };
-            setStatus(await api('/api/email/validationCustomEmail', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    async function sendCustom() {
-        try {
-            const attachmentMap = await listAttachments();
-            const attachments = Object.entries(attachmentMap).map(([fileName, filePath]) => ({ fileName, filePath }));
-            const payload = {
-                templatePath: document.getElementById('templatePath').value,
-                csvPath: document.getElementById('csvPath').value,
-                attachments
-            };
-            setStatus(await api('/api/email/sendCustomEmail', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }));
-        } catch (e) { setStatus(e.message, false); }
-    }
-
-    loadAuth();
-    renderTabs();
-    paneHtml();
-    listAttachments();
-    listTemplateCsv();
+(function () {
+    var el = document.getElementById('sessionUser');
+    var p = window.location.pathname || '/';
+    var dir = p.lastIndexOf('/') >= 0 ? p.slice(0, p.lastIndexOf('/') + 1) : '/';
+    var src = dir + 'js/web-console.js?v=6';
+    if (el) el.textContent = '正在加载控制台脚本…';
+    window.__webConsoleScriptSrc = src;
+    document.write('<script src="' + src.replace(/"/g, '') + '"><\/script>');
+})();
+</script>
+<script>
+(function () {
+    // 移除“initApp 是否存在”的瞬时检查，避免因加载时序导致误报。
+})();
 </script>
 </body>
 </html>

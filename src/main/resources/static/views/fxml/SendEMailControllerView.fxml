@@ -1,41 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="558.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiSendEMailController">
-
-    <children>
-        <!-- 代理菜单 -->
-        <MenuButton fx:id="configurationOptionsMenuButton" layoutX="14.0" layoutY="14.0" text="代理">
-            <items>
-                <MenuItem onAction="#proxySettingsMenuButton" text="代理设置" />
-            </items>
-        </MenuButton>
-
-        <!-- 输入字段 -->
-        <TextField fx:id="recipientEmailTextField" layoutX="126.0" layoutY="67.0" prefHeight="27.0" prefWidth="255.0" promptText="xxx@qq.com" />
-        <Button fx:id="loadRecipientsButton" layoutX="416.0" layoutY="67.0" onAction="#loadRecipientsFromTxt" prefHeight="27.0" prefWidth="110.0" text="导入收件人" />
-
-        <TextField fx:id="subjectTextField" layoutX="126.0" layoutY="116.0" prefHeight="27.0" prefWidth="255.0" promptText="邮件主题" />
-        <TextField fx:id="contentTextField" layoutX="126.0" layoutY="165.0" prefHeight="27.0" prefWidth="255.0" promptText="邮件内容" />
-        <Button fx:id="loadHtmlContentButton" layoutX="416.0" layoutY="165.0" onAction="#loadHtmlContent" prefHeight="27.0" prefWidth="110.0" text="导入HTML内容" />
-
-        <!-- 附件按钮 -->
-        <Button fx:id="addAttachmentsButton" layoutX="126.0" layoutY="209.0" onAction="#addAttachments" prefHeight="27.0" prefWidth="110.0" text="添加附件" />
-
-        <!-- 发送按钮 -->
-        <Button layoutX="316.0" layoutY="209.0" onAction="#sendButton" prefHeight="27.0" prefWidth="65.0" text="发送" textFill="#e10c0c" />
-
-        <!-- 状态显示区域 -->
-        <TextArea fx:id="statusDisplayArea" editable="false" layoutX="21.0" layoutY="282.0" prefHeight="263.0" prefWidth="506.0" promptText="Results show" />
-
-
-        <!-- 分隔线 -->
-        <Separator layoutY="41.0" prefHeight="27.0" prefWidth="547.0" />
-        <Separator layoutY="252.0" prefHeight="27.0" prefWidth="547.0" />
-      <Label layoutX="30.0" layoutY="72.0" text="收件人邮箱：" />
-      <Label layoutX="37.0" layoutY="121.0" text="邮件主题：" />
-      <Label layoutX="37.0" layoutY="170.0" text="邮件内容：" />
-      <Label layoutX="33.0" layoutY="214.0" text="附件(可选)：" />
-    </children>
-</AnchorPane>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<VBox maxHeight="Infinity" maxWidth="Infinity" spacing="14.0" styleClass="page-root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tool.send_email.javafx.controller.GuiSendEMailController">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="page-toolbar">
+         <children>
+            <MenuButton fx:id="configurationOptionsMenuButton" mnemonicParsing="false" styleClass="menu-toolbar" text="快捷菜单">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#proxySettingsMenuButton" text="代理设置" />
+               </items>
+            </MenuButton>
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <VBox spacing="12.0" styleClass="section-card">
+         <children>
+            <Label styleClass="section-title" text="撰写邮件" />
+            <Label styleClass="section-hint" text="填写收件人、主题与正文；可选导入/添加附件。" />
+            <GridPane hgap="12.0" vgap="12.0" VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" maxWidth="100.0" minWidth="80.0" prefWidth="92.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="180.0" />
+                  <ColumnConstraints hgrow="NEVER" minWidth="108.0" prefWidth="120.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="36.0" />
+                  <RowConstraints minHeight="40.0" />
+               </rowConstraints>
+               <children>
+                  <Label styleClass="form-label" text="收件人" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="recipientEmailTextField" promptText="多个用逗号分隔，如 a@b.com" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                  <Button fx:id="loadRecipientsButton" onAction="#loadRecipientsFromTxt" styleClass="btn-secondary" text="导入收件人" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                  <Label styleClass="form-label" text="主题" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="subjectTextField" promptText="邮件主题" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Label styleClass="form-label" text="正文" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="contentTextField" promptText="邮件正文或简短内容" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button fx:id="loadHtmlContentButton" onAction="#loadHtmlContent" styleClass="btn-secondary" text="导入 HTML" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label styleClass="form-label" text="From 显示昵称（可选）" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <TextField fx:id="forgeFromNicknameTextField" promptText="昵称" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <Label styleClass="form-label" text="Reply-To 邮箱（可选）" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <TextField fx:id="replyToEmailTextField" promptText="replyto@example.com" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <Label styleClass="form-label" text="Reply-To 昵称（可选）" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                  <TextField fx:id="replyToNicknameTextField" promptText="Reply Nick" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <Label styleClass="form-label" text="附件" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                     <children>
+                        <Button fx:id="addAttachmentsButton" onAction="#addAttachments" styleClass="btn-secondary" text="添加附件" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#sendButton" styleClass="btn-primary" text="发送" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children>
+         <padding>
+            <Insets bottom="16.0" left="18.0" right="18.0" top="16.0" />
+         </padding>
+      </VBox>
+      <VBox spacing="10.0" styleClass="section-card" VBox.vgrow="ALWAYS">
+         <children>
+            <Label styleClass="section-title" text="运行日志" />
+            <Separator styleClass="sep" />
+            <TextArea fx:id="statusDisplayArea" editable="false" maxHeight="Infinity" maxWidth="Infinity" minHeight="160.0" promptText="发送状态与回调信息将显示在这里…" styleClass="log-area" wrapText="true" VBox.vgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets bottom="16.0" left="18.0" right="18.0" top="14.0" />
+         </padding>
+      </VBox>
+   </children>
+</VBox>

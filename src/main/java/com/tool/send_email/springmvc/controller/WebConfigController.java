@@ -1,5 +1,6 @@
 package com.tool.send_email.springmvc.controller;
 
+import com.tool.send_email.dto.ApiResponse;
 import com.tool.send_email.config.MailConfig;
 import com.tool.send_email.service.ConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.tool.send_email.utils.FileParserUtils.checkFileExist;
@@ -38,12 +40,12 @@ public class WebConfigController {
      */
     @GetMapping("/getConfig")
     @Operation(summary = "2. 根据ID获取配置信息", description = "根据ID获取配置信息")
-    public MailConfig.MailAccount getConfig(@Parameter(description = "从0开始递增", required = true) @RequestParam int index) {
+    public ApiResponse<MailConfig.MailAccount> getConfig(@Parameter(description = "从0开始递增", required = true) @RequestParam int index) {
         try {
             MailConfig.MailAccount account = configService.getAccount(index);
-            return account;
+            return ApiResponse.ok(account);
         } catch (Exception e) {
-            return null;
+            return ApiResponse.fail(HttpStatus.NOT_FOUND.value(), "配置不存在");
         }
     }
 
@@ -55,12 +57,12 @@ public class WebConfigController {
      */
     @GetMapping("/getAllConfig")
     @Operation(summary = "1. 获取全部的配置信息", description = "获取全部的配置信息")
-    public List<MailConfig.MailAccount> getAllConfig() {
+    public ApiResponse<List<MailConfig.MailAccount>> getAllConfig() {
         try {
             List<MailConfig.MailAccount> accounts = configService.getAllAccounts();
-            return accounts;
+            return ApiResponse.ok(accounts != null ? accounts : Collections.emptyList());
         } catch (Exception e) {
-            return null;
+            return ApiResponse.ok(Collections.emptyList());
         }
     }
 
@@ -74,16 +76,16 @@ public class WebConfigController {
      */
     @PostMapping("/addConfig")
     @Operation(summary = "3. 根据ID新增配置", description = "根据ID新增配置")
-    public ResponseEntity<String> addConfig(@Parameter(description = "配置信息", required = true) @RequestBody MailConfig.MailAccount account, @Parameter(description = "配置ID", required = true) @RequestParam int index) {
+    public ApiResponse<String> addConfig(@Parameter(description = "配置信息", required = true) @RequestBody MailConfig.MailAccount account, @Parameter(description = "配置ID", required = true) @RequestParam int index) {
         try {
             if (!configService.checkAccountId(index)) {
                 configService.addAccount(account, index);
-                return ResponseEntity.ok("success");
+                return ApiResponse.okMessage("success");
             } else {
-                return ResponseEntity.ok("fail, ID为空");
+                return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), "fail, 该配置序号已存在");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+            return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error");
         }
     }
 
@@ -109,12 +111,12 @@ public class WebConfigController {
      */
     @PostMapping("/updateConfig")
     @Operation(summary = "4. 根据ID更新配置", description = "根据ID更新配置")
-    public ResponseEntity<String> updateConfig(@Parameter(description = "配置信息", required = true) @RequestBody MailConfig.MailAccount account, @Parameter(description = "配置ID", required = true) @RequestParam int index) {
+    public ApiResponse<String> updateConfig(@Parameter(description = "配置信息", required = true) @RequestBody MailConfig.MailAccount account, @Parameter(description = "配置ID", required = true) @RequestParam int index) {
         try {
             configService.updateAccount(account, index);
-            return ResponseEntity.ok("success");
+            return ApiResponse.okMessage("success");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+            return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error");
         }
     }
 
@@ -127,12 +129,12 @@ public class WebConfigController {
      */
     @GetMapping("/delConfig")
     @Operation(summary = "5. 根据ID删除配置", description = "根据ID删除配置")
-    public ResponseEntity<String> delConfig(@Parameter(description = "配置ID", required = true) @RequestParam int index) {
+    public ApiResponse<String> delConfig(@Parameter(description = "配置ID", required = true) @RequestParam int index) {
         try {
             configService.removeAccount(index);
-            return ResponseEntity.ok("success");
+            return ApiResponse.okMessage("success");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+            return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error");
         }
     }
 

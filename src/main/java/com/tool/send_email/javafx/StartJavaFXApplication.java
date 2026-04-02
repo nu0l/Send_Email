@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * JavaFX 启动类
@@ -27,7 +28,11 @@ public class StartJavaFXApplication extends Application {
             // 设置控制器工厂，以便 Spring 管理控制器
             fxmlLoader.setControllerFactory(StartApplicationMain.getContext()::getBean);
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 800, 740);
+            String css = Objects.requireNonNull(
+                    getClass().getResource("/static/styles/javafx-app.css"),
+                    "javafx-app.css").toExternalForm();
+            scene.getStylesheets().add(css);
             Stage stage = new Stage();
             stage.setTitle("Send Email | by: iak3ec");
             URL iconUrl = getClass().getResource("/static/images/favicon.png");
@@ -35,6 +40,8 @@ public class StartJavaFXApplication extends Application {
                 stage.getIcons().add(new Image(iconUrl.toString()));
             }
             stage.setScene(scene);
+            stage.setMinWidth(680);
+            stage.setMinHeight(560);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

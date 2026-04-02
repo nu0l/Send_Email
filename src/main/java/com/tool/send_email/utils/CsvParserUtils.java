@@ -33,7 +33,11 @@ public class CsvParserUtils {
         List<Map<String, String>> records = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
-            List<String> headers = Arrays.asList(reader.readNext());
+            String[] headerRow = reader.readNext();
+            if (headerRow == null) {
+                return records;
+            }
+            List<String> headers = Arrays.asList(headerRow);
 
             // 去除列头中的空格和 BOM 字符
             headers = cleanHeaders(headers);
@@ -42,8 +46,8 @@ public class CsvParserUtils {
             while ((nextLine = reader.readNext()) != null) {
                 Map<String, String> record = new HashMap<>();
                 for (int i = 0; i < headers.size(); i++) {
-                    // 对每列数据去除两端的空白字符
-                    record.put(headers.get(i), nextLine[i].trim());
+                    String cell = i < nextLine.length && nextLine[i] != null ? nextLine[i].trim() : "";
+                    record.put(headers.get(i), cell);
                 }
                 records.add(record);
             }
@@ -63,7 +67,7 @@ public class CsvParserUtils {
         List<Map<String, String>> validRecords = records.stream()
                 .filter(record -> {
                     String email = record.get("toEmail");
-                    if (email != null && email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
+                    if (email != null && email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
                         return true; // 保留有效的记录
                     } else {
                         logger.warn("记录无效：{}", record);
@@ -77,13 +81,24 @@ public class CsvParserUtils {
     }
 
 
-    // 清理列头中的空白字符和 BOM
+    // 清理列头中的空白字符与 UTF-8 BOM，保留中文等列名
     private static List<String> cleanHeaders(List<String> headers) {
         List<String> cleanedHeaders = new ArrayList<>();
         for (String header : headers) {
-            cleanedHeaders.add(header.trim().replaceAll("[^\\x00-\\x7F]", "")); // 去掉非 ASCII 字符
+            cleanedHeaders.add(stripBomAndTrim(header));
         }
         return cleanedHeaders;
+    }
+
+    private static String stripBomAndTrim(String s) {
+        if (s == null) {
+            return "";
+        }
+        String t = s.trim();
+        if (t.startsWith("\uFEFF")) {
+            t = t.substring(1).trim();
+        }
+        return t;
     }
 
 }

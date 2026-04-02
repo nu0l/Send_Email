@@ -51,7 +51,12 @@ public class CustomEmailService {
      * @param templatePath 模板路径
      * @throws MessagingException
      */
-    public void parseTemplateAndSendEmail(List<Map<String, String>> recipients, String templatePath, Map<String, String> attachmentFiles) throws MessagingException {
+    public void parseTemplateAndSendEmail(List<Map<String, String>> recipients,
+                                            String templatePath,
+                                            Map<String, String> attachmentFiles,
+                                            String forgeFromNickname,
+                                            String replyToEmail,
+                                            String replyToNickname) throws MessagingException {
         if (recipients == null || recipients.isEmpty()) {
             logger.error("解析csv文件时出错");
             return;
@@ -69,7 +74,15 @@ public class CustomEmailService {
             String renderedContent = renderTemplate(recipient, templatePath);
             List<String> to = Collections.singletonList(recipient.get("toEmail"));
             String subject = recipient.get("emailSubject");
-            Email email = new Email(to, subject, renderedContent, attachmentFiles.isEmpty() ? null : attachmentFiles);
+            Email email = new Email(to, subject, renderedContent,
+                    attachmentFiles == null || attachmentFiles.isEmpty() ? null : attachmentFiles,
+                    "CUSTOM");
+            // 本地研究测试：
+            // - 不改动 From 邮箱，只改显示昵称
+            // - 设置 Reply-To
+            email.setForgeFromNickname(forgeFromNickname);
+            email.setReplyToEmail(replyToEmail);
+            email.setReplyToNickname(replyToNickname);
 
             // 调用邮件发送服务
             emailService.sendEmail(email);
