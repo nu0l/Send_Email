@@ -56,6 +56,8 @@ public class GuiSendEMailController implements EmailStatusCallback {
     @FXML
     private TextField replyToNicknameTextField;
     @FXML
+    private TextField deliveryIntervalMsTextField;
+    @FXML
     private TextArea statusDisplayArea;
     public GuiSendEMailController() {
         this.emailService = null;
@@ -103,6 +105,32 @@ public class GuiSendEMailController implements EmailStatusCallback {
             replyToNick = replyToNick.trim();
             if (!replyToNick.isEmpty()) {
                 email.setReplyToNickname(replyToNick);
+            }
+        }
+
+        // 投递间隔（秒，0=不控制）：支持 "1s" / "5" 等形式
+        if (deliveryIntervalMsTextField != null) {
+            String v = deliveryIntervalMsTextField.getText();
+            if (v != null) {
+                v = v.trim();
+                if (!v.isEmpty()) {
+                    try {
+                        String s = v.toLowerCase();
+                        long intervalMs;
+                        if (s.endsWith("ms")) {
+                            intervalMs = Long.parseLong(s.substring(0, s.length() - 2));
+                        } else {
+                            if (s.endsWith("s")) s = s.substring(0, s.length() - 1);
+                            long seconds = Long.parseLong(s);
+                            intervalMs = seconds * 1000L;
+                        }
+                        if (intervalMs > 0) {
+                            email.setDeliveryIntervalMs(intervalMs);
+                        }
+                    } catch (Exception ignore) {
+                        // 输入非法时忽略
+                    }
+                }
             }
         }
 

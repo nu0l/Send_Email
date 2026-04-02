@@ -27,6 +27,12 @@ public class Email {
     private String replyToEmail;
     private String replyToNickname;
 
+    /**
+     * 投递间隔（毫秒）：用于控制连续发送之间的等待时长，
+     * 以降低触发服务商高频拦截/风控的概率。
+     */
+    private long deliveryIntervalMs = 0L;
+
     public Email() {
     }
 

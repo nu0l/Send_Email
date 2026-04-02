@@ -152,7 +152,8 @@ public class WebCustomEmailController {
                     attachments == null || attachments.isEmpty() ? null : attachments,
                     requestBody.getForgeFromNickname(),
                     requestBody.getReplyToEmail(),
-                    requestBody.getReplyToNickname()
+                    requestBody.getReplyToNickname(),
+                    requestBody.getDeliveryIntervalMs()
             );
             return ApiResponse.okMessage("邮件正在发送中，请到控制台查看发送日志");
         } catch (MessagingException e) {

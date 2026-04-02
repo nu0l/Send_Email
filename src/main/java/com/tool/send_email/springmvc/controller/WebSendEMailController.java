@@ -149,6 +149,9 @@ public class WebSendEMailController {
             email.setForgeFromNickname(requestBody.getForgeFromNickname());
             email.setReplyToEmail(requestBody.getReplyToEmail());
             email.setReplyToNickname(requestBody.getReplyToNickname());
+            if (requestBody.getDeliveryIntervalMs() != null && requestBody.getDeliveryIntervalMs() > 0) {
+                email.setDeliveryIntervalMs(requestBody.getDeliveryIntervalMs());
+            }
             emailService.sendEmail(email);
 
             return ApiResponse.okMessage("邮件正在发送中，请到控制台查看发送日志");

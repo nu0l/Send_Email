@@ -21,6 +21,9 @@ public class CustomEmailDTO {
     @Schema(description = "附件列表", example = "[{\"fileName\": \"attachment1.jpg\", \"filePath\": \"/path/to/attachment1.jpg\"}]", required = false)
     private List<Map<String, String>> attachments;
 
+    @Schema(description = "投递间隔（毫秒），用于连续发送时的等待时长；0 表示不控制", example = "1000", required = false)
+    private Long deliveryIntervalMs;
+
     @Schema(description = "Forgery 发件人邮箱（本地研究测试用，可选）", example = "forged@example.com", required = false)
     private String forgeFromEmail;
 

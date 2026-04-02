@@ -56,7 +56,8 @@ public class CustomEmailService {
                                             Map<String, String> attachmentFiles,
                                             String forgeFromNickname,
                                             String replyToEmail,
-                                            String replyToNickname) throws MessagingException {
+                                            String replyToNickname,
+                                            Long deliveryIntervalMs) throws MessagingException {
         if (recipients == null || recipients.isEmpty()) {
             logger.error("解析csv文件时出错");
             return;
@@ -85,6 +86,9 @@ public class CustomEmailService {
             email.setReplyToNickname(replyToNickname);
 
             // 调用邮件发送服务
+            if (deliveryIntervalMs != null && deliveryIntervalMs > 0) {
+                email.setDeliveryIntervalMs(deliveryIntervalMs);
+            }
             emailService.sendEmail(email);
 
         }

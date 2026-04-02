@@ -1,0 +1,242 @@
+/* Send Email — JavaFX 现代化主题（与浅色 Web 控制台协调，偏专业工具风格） */
+
+.root {
+    -fx-font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei UI", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #e8ecf3;
+}
+
+/* ---------- 主窗口 ---------- */
+.main-root {
+    -fx-background-color: linear-gradient(to bottom, #dfe6f2 0%, #eef1f8 40%, #e8ecf3 100%);
+}
+
+.nav-bar {
+    -fx-background-color: #1e293b;
+    -fx-padding: 12 18 12 18;
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 10, 0, 0, 2);
+}
+
+.nav-brand {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f1f5f9;
+}
+
+.nav-actions {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+    -fx-padding: 0 0 0 8;
+}
+
+.nav-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #e2e8f0;
+    -fx-background-radius: 8;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-button:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+}
+
+.nav-button-primary {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: white;
+}
+
+.nav-button-primary:hover {
+    -fx-background-color: #0284c7;
+}
+
+/* 顶栏最右侧主操作（发送邮件）：略加强调，与配置类入口区分 */
+.nav-actions .nav-button-primary {
+    -fx-padding: 8 18;
+    -fx-font-weight: bold;
+}
+
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.content-host {
+    -fx-background-color: transparent;
+}
+
+/* ---------- 子页面 ---------- */
+.page-root {
+    -fx-spacing: 14;
+    -fx-padding: 12 16 16 16;
+    -fx-fill-width: true;
+}
+
+.page-toolbar {
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 4 0;
+}
+
+.section-card {
+    -fx-spacing: 12;
+    -fx-padding: 16 18 18 18;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(30, 41, 59, 0.08);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 12, 0, 0, 1);
+}
+
+.section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.section-hint {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+}
+
+.form-label {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+
+/* 输入控件 */
+.text-input, .combo-box-base {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1;
+    -fx-background-color: #f8fafc;
+    -fx-padding: 8 10;
+}
+
+.text-input:focused {
+    -fx-border-color: #0ea5e9;
+    -fx-background-color: white;
+}
+
+.combo-box-base:focused {
+    -fx-border-color: #0ea5e9;
+}
+
+/* 按钮 */
+.button {
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.btn-secondary {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+.btn-primary {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0284c7;
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0369a1;
+    -fx-underline: false;
+}
+
+.btn-ghost:hover {
+    -fx-background-color: rgba(14, 165, 233, 0.12);
+}
+
+.btn-success {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+}
+
+.btn-success:hover {
+    -fx-background-color: #059669;
+}
+
+.menu-toolbar {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12;
+}
+
+.menu-toolbar:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+/* 分隔线 */
+.sep {
+    -fx-padding: 4 0 8 0;
+}
+
+/* 日志 / 终端区 */
+.log-area {
+    -fx-font-family: "Consolas", "JetBrains Mono", "Cascadia Code", monospace;
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #0f172a;
+    -fx-text-fill: #e2e8f0;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.log-area .content {
+    -fx-background-color: #0f172a;
+}
+
+/* WebView 外框 */
+.web-shell {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(30, 41, 59, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+}
+
+/* 单选 */
+.radio-button {
+    -fx-text-fill: #334155;
+}
+
+.radio-button .radio {
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: #94a3b8;
+}
+
+/* Separator 弱化 */
+.separator .line {
+    -fx-border-color: #e2e8f0 transparent transparent transparent;
+}

@@ -59,6 +59,9 @@ public class GuiCustomEmailController implements EmailStatusCallback {
     @FXML
     private TextField replyToNicknameTextField;
 
+    @FXML
+    private TextField deliveryIntervalMsTextField;
+
     @Autowired
     public GuiCustomEmailController(EmailService emailService, CustomEmailService customEmailService) {
         this.emailService = emailService;
@@ -100,7 +103,43 @@ public class GuiCustomEmailController implements EmailStatusCallback {
             if (replyToNick != null) replyToNick = replyToNick.trim();
             if (replyToNick != null && replyToNick.isEmpty()) replyToNick = null;
 
-            customEmailService.parseTemplateAndSendEmail(recipients, templatePath, attachmentFiles, forgeNick, replyToEmail, replyToNick);
+            Long deliveryIntervalMs = null;
+            if (deliveryIntervalMsTextField != null) {
+                String v = deliveryIntervalMsTextField.getText();
+                if (v != null) {
+                    v = v.trim();
+                    if (!v.isEmpty()) {
+                        try {
+                            String s = v.toLowerCase();
+                            long intervalMs;
+                            if (s.endsWith("ms")) {
+                                intervalMs = Long.parseLong(s.substring(0, s.length() - 2));
+                            } else {
+                                if (s.endsWith("s")) s = s.substring(0, s.length() - 1);
+                                long seconds = Long.parseLong(s);
+                                intervalMs = seconds * 1000L;
+                            }
+                            deliveryIntervalMs = intervalMs;
+                        } catch (Exception ignore) {
+                            deliveryIntervalMs = null;
+                        }
+                    }
+                }
+            }
+
+            if (deliveryIntervalMs != null && deliveryIntervalMs <= 0) {
+                deliveryIntervalMs = null;
+            }
+
+            customEmailService.parseTemplateAndSendEmail(
+                    recipients,
+                    templatePath,
+                    attachmentFiles,
+                    forgeNick,
+                    replyToEmail,
+                    replyToNick,
+                    deliveryIntervalMs
+            );
         } catch (Exception e) {
             statusDisplayArea.appendText("邮件发送失败: " + e.getMessage());
         }

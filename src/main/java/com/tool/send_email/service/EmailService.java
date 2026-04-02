@@ -40,6 +40,10 @@ public class EmailService {
     // 用于轮询分配发送账户，减少每封邮件都从 index=0 开始导致的集中失败/集中延迟
     private final AtomicInteger senderCursor = new AtomicInteger(0);
 
+    // 全局投递间隔控制：确保在 Web/GUI/模板群发等场景下，连续投递间隔更稳定
+    private final Object deliveryIntervalLock = new Object();
+    private long lastSendAtMs = 0L;
+
     /**
      * 异步发送邮件
      *
@@ -134,6 +138,10 @@ public class EmailService {
             int index = (startIndex + attempt) % usable;
             String from = null;
             try {
+                // 按“投递间隔”控制连续发送节奏（只对每个收件人第一个尝试生效）
+                if (attempt == 0) {
+                    applyDeliveryInterval(email != null ? email.getDeliveryIntervalMs() : 0L);
+                }
                 // 失败后才延迟，减少成功时的额外等待
                 if (attempt > 0) {
                     jitterDelay(attempt);
@@ -158,6 +166,11 @@ public class EmailService {
                 logger.error("邮件发送失败: {} -> {}, senderIndex={}, 尝试下一个邮箱配置。错误信息: {}",
                         from, to, index, e.getMessage());
 
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+
                 // Forgery 情况下，很多邮件服务端会对 MAIL FROM 做硬校验。
                 // 如果明确是 “Mail from must equal authorized user” 之类拒收，则切换其它账号也仍会失败，
                 // 并且会触发更多 SMTP 登录/风控，故直接停止重试。
@@ -174,6 +187,19 @@ public class EmailService {
 
         notifyStatus(String.format("所有邮件账户均无法发送邮件给: %s", to));
         return false;
+    }
+
+    private void applyDeliveryInterval(long intervalMs) throws InterruptedException {
+        if (intervalMs <= 0) return;
+        synchronized (deliveryIntervalLock) {
+            long now = System.currentTimeMillis();
+            long target = (lastSendAtMs <= 0L) ? now : (lastSendAtMs + intervalMs);
+            long sleep = target - now;
+            if (sleep > 0) {
+                TimeUnit.MILLISECONDS.sleep(sleep);
+            }
+            lastSendAtMs = System.currentTimeMillis();
+        }
     }
 
     private boolean shouldStopRetryForSendException(Exception e) {

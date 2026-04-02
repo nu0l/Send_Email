@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 — Send Email</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(165deg, #0f172a 0%, #1e293b 42%, #e2e8f0 42%, #f1f5f9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #0f172a;
+        }
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px 28px;
+            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+        h1 {
+            margin: 0 0 6px;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+        p.sub {
+            margin: 0 0 24px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        button[type="submit"] {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #2563eb;
+            color: #fff;
+            margin-top: 8px;
+        }
+        button[type="submit"]:hover { background: #1d4ed8; }
+        .msg {
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .msg.err {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+        .msg.ok {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .foot {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Send Email</h1>
+    <p class="sub">请使用 Spring Security 配置中的账号登录，进入 Web 控制台。</p>
+    <div id="errBox" class="msg err">用户名或密码错误，请重试。</div>
+    <div id="outBox" class="msg ok">您已安全退出。</div>
+    <form method="post" action="login" autocomplete="on">
+        <label for="username">用户名</label>
+        <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="submit">登录</button>
+    </form>
+    <p class="foot">控制台使用会话 Cookie，请在完成操作后主动退出。</p>
+</div>
+<script>
+    (function () {
+        var q = new URLSearchParams(window.location.search);
+        if (q.has('error')) {
+            document.getElementById('errBox').style.display = 'block';
+        }
+        if (q.has('logout')) {
+            document.getElementById('outBox').style.display = 'block';
+        }
+    })();
+</script>
+</body>
+</html>

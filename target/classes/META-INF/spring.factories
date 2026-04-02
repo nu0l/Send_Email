@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.tool.send_email.config.LateMvcValidatorAutoConfiguration
